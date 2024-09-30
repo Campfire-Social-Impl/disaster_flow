@@ -15,10 +15,10 @@ class HomeScreen extends StatelessWidget {
         extendBodyBehindAppBar: false,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(100.0),
+          preferredSize: Size.fromHeight(90.0),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 243, 0),
+              color: const Color.fromARGB(255, 255, 225, 75),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.2),
@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             child: AppBar(
-              toolbarHeight: 100.0,
+              toolbarHeight: 80.0,
               centerTitle: true,
               title: Text(
                 "防災アプリ",
@@ -45,116 +45,151 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 100,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start, // 上から開始
+              children: <Widget>[
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 110, // 各ボタンの高さ
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        shadowColor: Colors.black.withOpacity(0.5),
+                        elevation: 10,
                       ),
-                      shadowColor: Colors.black.withOpacity(0.5),
-                      elevation: 10,
-                    ),
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/Exit_icon.png', // 画像のパスを指定
-                          width: 40, // 画像の幅を設定
-                          height: 40, // 画像の高さを設定
-                        ),
-                        const SizedBox(width: 10), // 画像とテキストの間隔
-                        const Text(
-                          '避難',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontSize: 27,
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/Exit_icon.png', // 画像のパスを指定
+                            width: 50,
+                            height: 50,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 10),
+                          const Text(
+                            '避難',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                              fontSize: 27,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
+                const SizedBox(height: 30), // ボタン間のスペース
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 110, // 各ボタンの高さ
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        shadowColor: Colors.black.withOpacity(0.5),
+                        elevation: 10,
+                      ),
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/set.png', // 画像のパスを指定
+                            width: 50,
+                            height: 50,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            '災害項目別設定',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                              fontSize: 27,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30), // ボタン間のスペース
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 110, // 各ボタンの高さ
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        shadowColor: Colors.black.withOpacity(0.5),
+                        elevation: 10,
+                      ),
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/check_24.png', // 画像のパスを指定
+                            width: 50,
+                            height: 50,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            '内容確認',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                              fontSize: 27,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          color: const Color.fromARGB(255, 255, 225, 75),
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                padding: EdgeInsets.zero,
+                iconSize: 32,
+                icon: Icon(Icons.home,
+                    color: const Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {},
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 100,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      shadowColor: Colors.black.withOpacity(0.5),
-                      elevation: 10,
-                    ),
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/set.png', // 画像のパスを指定
-                          width: 40, // 画像の幅を設定
-                          height: 40, // 画像の高さを設定
-                        ),
-                        const SizedBox(width: 10), // 画像とテキストの間隔
-                        const Text(
-                          '災害項目別設定',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontSize: 27,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              IconButton(
+                padding: EdgeInsets.zero,
+                iconSize: 32,
+                icon: Icon(Icons.info,
+                    color: const Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {},
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 100,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      shadowColor: Colors.black.withOpacity(0.5),
-                      elevation: 10,
-                    ),
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/check_circle.png', // 画像のパスを指定
-                          width: 40, // 画像の幅を設定
-                          height: 40, // 画像の高さを設定
-                        ),
-                        const SizedBox(width: 10), // 画像とテキストの間隔
-                        const Text(
-                          '内容確認',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontSize: 27,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              IconButton(
+                padding: EdgeInsets.zero,
+                iconSize: 32,
+                icon: Icon(Icons.menu,
+                    color: const Color.fromARGB(255, 255, 255, 255)),
+                onPressed: () {},
               ),
             ],
           ),

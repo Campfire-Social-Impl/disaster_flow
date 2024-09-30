@@ -55,7 +55,7 @@ flutter:
   assets:
     - assets/images/Exit_icon.png
     - assets/images/set.png
-    - assets/images/check_circle.png
+    - assets/images/check_24.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

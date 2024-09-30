@@ -84,9 +84,78 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Text('Default'),
-              Text('Bold', style: TextStyle(fontWeight: FontWeight.bold)),
-              Text('Italic', style: TextStyle(fontStyle: FontStyle.italic)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 100,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.5),
+                      elevation: 10,
+                    ),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/set.png', // 画像のパスを指定
+                          width: 40, // 画像の幅を設定
+                          height: 40, // 画像の高さを設定
+                        ),
+                        const SizedBox(width: 10), // 画像とテキストの間隔
+                        const Text(
+                          '災害項目別設定',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 27,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 100,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.5),
+                      elevation: 10,
+                    ),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/check_circle.png', // 画像のパスを指定
+                          width: 40, // 画像の幅を設定
+                          height: 40, // 画像の高さを設定
+                        ),
+                        const SizedBox(width: 10), // 画像とテキストの間隔
+                        const Text(
+                          '内容確認',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 27,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

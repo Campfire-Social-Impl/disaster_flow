@@ -66,10 +66,10 @@ class HomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            const Color.fromARGB(255, 255, 255, 255), // 左の色
-                            const Color.fromARGB(255, 255, 220, 81), // 右の色
+                            const Color.fromARGB(255, 255, 255, 255),
+                            const Color.fromARGB(255, 255, 220, 81),
                           ],
-                          stops: [0.85, 0.15], // 指定した位置で色が変わる
+                          stops: [0.85, 0.15],
                         ),
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
@@ -81,12 +81,13 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       child: ElevatedButton(
+                        //避難用ボタン
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent, // 背景色は透明に設定
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          elevation: 0, // シャドウを無効にする
+                          elevation: 0,
                         ),
                         onPressed: () {}, // 押したときの処理
                         child: Stack(
@@ -136,10 +137,10 @@ class HomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            const Color.fromARGB(255, 255, 255, 255), // 左の色
-                            const Color.fromARGB(255, 255, 220, 81), // 右の色
+                            const Color.fromARGB(255, 255, 255, 255),
+                            const Color.fromARGB(255, 255, 220, 81),
                           ],
-                          stops: [0.85, 0.15], // 指定した位置で色が変わる
+                          stops: [0.85, 0.15],
                         ),
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
@@ -151,12 +152,13 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       child: ElevatedButton(
+                        //災害項目別設定ボタン
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent, // 背景色は透明に設定
+                          backgroundColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          elevation: 0, // シャドウを無効にする
+                          elevation: 0,
                         ),
                         onPressed: () {}, // 押したときの処理
                         child: Stack(
@@ -206,10 +208,10 @@ class HomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            const Color.fromARGB(255, 255, 255, 255), // 左の色
-                            const Color.fromARGB(255, 255, 220, 81), // 右の色
+                            const Color.fromARGB(255, 255, 255, 255),
+                            const Color.fromARGB(255, 255, 220, 81),
                           ],
-                          stops: [0.85, 0.15], // 指定した位置で色が変わる
+                          stops: [0.85, 0.15],
                         ),
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
@@ -221,12 +223,13 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       child: ElevatedButton(
+                        //内容確認ボタン
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent, // 背景色は透明に設定
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          elevation: 0, // シャドウを無効にする
+                          elevation: 0,
                         ),
                         onPressed: () {}, // 押したときの処理
                         child: Stack(

@@ -7,24 +7,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:disaster_flow/main.dart';
+import 'package:disaster_flow/main.dart'; // 正しいパスでインポート
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    // アプリの正しいウィジェットをビルド
+    await tester.pumpWidget(FlowScreen()); // 修正：FlowScreenを使う
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // 初期状態のカウンタが0か確認
+    expect(find.text('0'), findsOneWidget); // 0が表示されていることを確認
+    expect(find.text('1'), findsNothing); // 1が表示されていないことを確認
 
-    // Tap the '+' icon and trigger a frame.
+    // '+' アイコンをタップしてカウンタをインクリメント
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // カウンタが1にインクリメントされたことを確認
+    expect(find.text('0'), findsNothing); // 0が表示されていないことを確認
+    expect(find.text('1'), findsOneWidget); // 1が表示されていることを確認
   });
 }

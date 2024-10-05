@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(HomeScreen());
+  runApp(FlowScreen());
 }
 
-class HomeScreen extends StatelessWidget {
+class FlowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
                 end: Alignment.bottomRight,
                 colors: [
                   const Color.fromARGB(255, 255, 220, 81),
-                  const Color.fromARGB(255, 255, 214, 49), //グラデーションにするか迷ってる
+                  const Color.fromARGB(255, 255, 214, 49),
                 ],
               ),
               boxShadow: [
@@ -37,240 +37,85 @@ class HomeScreen extends StatelessWidget {
             ),
             child: AppBar(
               toolbarHeight: 80.0,
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
               centerTitle: true,
+              leading: IconButton(
+                iconSize: 30,
+                icon: Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () {
+                  // 戻る処理
+                },
+              ),
               title: Text(
-                "防災フロー",
+                '防災フロー',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 30,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              backgroundColor: Colors.transparent,
-              elevation: 0.0,
             ),
           ),
         ),
         body: Center(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 7),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 110,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            const Color.fromARGB(255, 255, 255, 255),
-                            const Color.fromARGB(255, 255, 220, 81),
-                          ],
-                          stops: [0.85, 0.15],
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 10.0,
-                            spreadRadius: 0.5,
-                          ),
-                        ],
-                      ),
-                      child: ElevatedButton(
-                        //避難用ボタン
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent, // 背景色は透明に設定
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          elevation: 0,
-                        ),
-                        onPressed: () {}, // 押したときの処理
-                        child: Stack(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 0),
-                                Image.asset(
-                                  'assets/images/Exit_icon.png',
-                                  width: 60,
-                                  height: 60,
-                                ),
-                                const SizedBox(width: 40),
-                                const Text(
-                                  '避難',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black,
-                                    fontSize: 27,
-                                  ),
-                                ),
-                              ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 250,
+                  child: InkWell(
+                    onTap: () {
+                      // 処理内容
+                    },
+                    child: Stack(
+                      alignment: Alignment.center, // 中央に配置
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(60), // 角丸を適用
+                          child: Opacity(
+                            opacity: 0.85, // 透過度を設定
+                            child: Image.asset(
+                              'assets/images/earthquake1.png',
+                              width: 400, // 幅を変更
+                              height: 300, // 高さを変更
+                              fit: BoxFit.contain, // アスペクト比を維持するための指定
                             ),
-                            Positioned(
-                              right: -21,
-                              top: 0,
-                              child: Image.asset(
-                                'assets/images/direction.png',
-                                width: 60,
-                                height: 60,
+                          ),
+                        ),
+                        // テキストの背景色を画像の中央に配置し、角丸を適用
+                        Align(
+                          alignment: Alignment.center, // 画像の中央に配置
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.black
+                                  .withOpacity(0.5), // 背景色を黒に設定（透過あり）
+                              borderRadius: BorderRadius.circular(10), // 角丸を適用
+                            ),
+                            width: 375, // 幅を変更
+                            height: 50, // 高さを設定
+                            alignment: Alignment.center, // テキストを中央に配置
+                            child: Text(
+                              '地震', // 表示したいテキスト
+                              style: TextStyle(
+                                color: Colors.white, // テキストの色を白に設定
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 7),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 110,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            const Color.fromARGB(255, 255, 255, 255),
-                            const Color.fromARGB(255, 255, 220, 81),
-                          ],
-                          stops: [0.85, 0.15],
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 10.0,
-                            spreadRadius: 0.5,
-                          ),
-                        ],
-                      ),
-                      child: ElevatedButton(
-                        //災害項目別設定ボタン
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          elevation: 0,
-                        ),
-                        onPressed: () {}, // 押したときの処理
-                        child: Stack(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 0),
-                                Image.asset(
-                                  'assets/images/set.png',
-                                  width: 60,
-                                  height: 60,
-                                ),
-                                const SizedBox(width: 40),
-                                const Text(
-                                  '災害項目別設定',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black,
-                                    fontSize: 27,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Positioned(
-                              right: -21,
-                              top: 0,
-                              child: Image.asset(
-                                'assets/images/direction.png',
-                                width: 60,
-                                height: 60,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 7),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 110,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            const Color.fromARGB(255, 255, 255, 255),
-                            const Color.fromARGB(255, 255, 220, 81),
-                          ],
-                          stops: [0.85, 0.15],
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 10.0,
-                            spreadRadius: 0.5,
-                          ),
-                        ],
-                      ),
-                      child: ElevatedButton(
-                        //内容確認ボタン
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent, // 背景色は透明に設定
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          elevation: 0,
-                        ),
-                        onPressed: () {}, // 押したときの処理
-                        child: Stack(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(width: 0),
-                                Image.asset(
-                                  'assets/images/check_24.png',
-                                  width: 60,
-                                  height: 60,
-                                ),
-                                const SizedBox(width: 40),
-                                const Text(
-                                  '内容確認',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black,
-                                    fontSize: 27,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Positioned(
-                              right: -21,
-                              top: 0,
-                              child: Image.asset(
-                                'assets/images/direction.png',
-                                width: 60,
-                                height: 60,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 5),
+            ],
           ),
         ),
         bottomNavigationBar: BottomAppBar(
@@ -289,12 +134,14 @@ class HomeScreen extends StatelessWidget {
                         color: const Color.fromARGB(255, 0, 0, 0)),
                     onPressed: () {},
                   ),
-                  Text('ニュース',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      )),
+                  Text(
+                    'ニュース',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
               Column(
@@ -307,12 +154,14 @@ class HomeScreen extends StatelessWidget {
                         color: const Color.fromARGB(255, 0, 0, 0)),
                     onPressed: () {},
                   ),
-                  Text('ホーム',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      )),
+                  Text(
+                    'ホーム',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
               Column(
@@ -325,12 +174,14 @@ class HomeScreen extends StatelessWidget {
                         color: const Color.fromARGB(255, 0, 0, 0)),
                     onPressed: () {},
                   ),
-                  Text('その他',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      )),
+                  Text(
+                    'その他',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
             ],

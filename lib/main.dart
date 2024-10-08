@@ -41,6 +41,7 @@ class FlowScreen extends StatelessWidget {
               elevation: 0.0,
               centerTitle: true,
               leading: IconButton(
+                //前画面に戻る
                 iconSize: 30,
                 icon: Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () {
@@ -48,7 +49,7 @@ class FlowScreen extends StatelessWidget {
                 },
               ),
               title: Text(
-                '防災フロー',
+                'テーマ選択',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 30,
@@ -65,56 +66,123 @@ class FlowScreen extends StatelessWidget {
               const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 7),
-                child: SizedBox(
+                child: Container(
                   width: double.infinity,
                   height: 250,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25), // 影の色
+                        blurRadius: 10, // ぼかしの強さ
+                        spreadRadius: 2, // 影の広がり
+                        offset: Offset(0, 0), // 影の位置（X, Y方向）
+                      ),
+                    ],
+                  ),
                   child: InkWell(
+                    //地震の対策用画面へ
                     onTap: () {
                       // 処理内容
                     },
-                    child: Stack(
-                      alignment: Alignment.center, // 中央に配置
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(60), // 角丸を適用
-                          child: Opacity(
-                            opacity: 0.85, // 透過度を設定
-                            child: Image.asset(
-                              'assets/images/earthquake1.png',
-                              width: 400, // 幅を変更
-                              height: 300, // 高さを変更
-                              fit: BoxFit.contain, // アスペクト比を維持するための指定
-                            ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30), // 均等な角丸を適用
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/earthquake1.png',
+                            width: 400, // 幅を設定
+                            height: 250, // 高さを設定
+                            fit: BoxFit.cover, // 画像を均等に配置
                           ),
-                        ),
-                        // テキストの背景色を画像の中央に配置し、角丸を適用
-                        Align(
-                          alignment: Alignment.center, // 画像の中央に配置
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black
-                                  .withOpacity(0.5), // 背景色を黒に設定（透過あり）
-                              borderRadius: BorderRadius.circular(10), // 角丸を適用
-                            ),
-                            width: 375, // 幅を変更
-                            height: 50, // 高さを設定
-                            alignment: Alignment.center, // テキストを中央に配置
-                            child: Text(
-                              '地震', // 表示したいテキスト
-                              style: TextStyle(
-                                color: Colors.white, // テキストの色を白に設定
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600,
+                          Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black
+                                    .withOpacity(0.5), // 背景色を黒に設定（透過あり）
+                                borderRadius:
+                                    BorderRadius.circular(15), // 同じ角丸を適用
+                              ),
+                              width: double.infinity,
+                              height: 50,
+                              alignment: Alignment.center,
+                              child: Text(
+                                '地震',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7),
+                child: Container(
+                  width: double.infinity,
+                  height: 250,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25), // 影の色
+                        blurRadius: 10, // ぼかしの強さ
+                        spreadRadius: 2, // 影の広がり
+                        offset: Offset(0, 5), // 影の位置（X, Y方向）
+                      ),
+                    ],
+                  ),
+                  child: InkWell(
+                    //洪水の対策用画面へ
+                    onTap: () {
+                      // 処理内容
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30), // 均等な角丸を適用
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/flood1.png',
+                            width: 400, // 幅を設定
+                            height: 250, // 高さを設定
+                            fit: BoxFit.cover, // 画像を均等に配置
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black
+                                    .withOpacity(0.5), // 背景色を黒に設定（透過あり）
+                                borderRadius:
+                                    BorderRadius.circular(15), // 同じ角丸を適用
+                              ),
+                              width: double.infinity,
+                              height: 50,
+                              alignment: Alignment.center,
+                              child: Text(
+                                '洪水',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

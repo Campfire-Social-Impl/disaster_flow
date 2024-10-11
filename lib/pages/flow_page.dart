@@ -33,7 +33,6 @@ class FlowScreen extends StatelessWidget {
             elevation: 0.0,
             centerTitle: true,
             leading: IconButton(
-              //前画面に戻る
               iconSize: 30,
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
@@ -51,132 +50,28 @@ class FlowScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 7),
-              child: Container(
-                width: double.infinity,
-                height: 250,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25), // 影の色
-                      blurRadius: 10, // ぼかしの強さ
-                      spreadRadius: 2, // 影の広がり
-                      offset: Offset(0, 0), // 影の位置（X, Y方向）
-                    ),
-                  ],
-                ),
-                child: InkWell(
-                  //地震の対策用画面へ
-                  onTap: () {
-                    // 処理内容
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30), // 均等な角丸を適用
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/earthquake1.png',
-                          width: 400, // 幅を設定
-                          height: 250, // 高さを設定
-                          fit: BoxFit.cover, // 画像を均等に配置
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black
-                                  .withOpacity(0.5), // 背景色を黒に設定（透過あり）
-                              borderRadius:
-                                  BorderRadius.circular(15), // 同じ角丸を適用
-                            ),
-                            width: double.infinity,
-                            height: 50,
-                            alignment: Alignment.center,
-                            child: Text(
-                              '地震',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 7),
-              child: Container(
-                width: double.infinity,
-                height: 250,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25), // 影の色
-                      blurRadius: 10, // ぼかしの強さ
-                      spreadRadius: 2, // 影の広がり
-                      offset: Offset(0, 5), // 影の位置（X, Y方向）
-                    ),
-                  ],
-                ),
-                child: InkWell(
-                  //洪水の対策用画面へ
-                  onTap: () {
-                    // 処理内容
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30), // 均等な角丸を適用
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/flood1.png',
-                          width: 400, // 幅を設定
-                          height: 250, // 高さを設定
-                          fit: BoxFit.cover, // 画像を均等に配置
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black
-                                  .withOpacity(0.5), // 背景色を黒に設定（透過あり）
-                              borderRadius:
-                                  BorderRadius.circular(15), // 同じ角丸を適用
-                            ),
-                            width: double.infinity,
-                            height: 50,
-                            alignment: Alignment.center,
-                            child: Text(
-                              '洪水',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+      // ListViewを使用してコンテンツをコンパクトに
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 7),
+        children: [
+          _buildOptionCard(
+            context,
+            title: '地震',
+            imagePath: 'assets/images/earthquake.png',
+            onTap: () {
+              // 地震の対策画面への処理
+            },
+          ),
+          const SizedBox(height: 15),
+          _buildOptionCard(
+            context,
+            title: '洪水',
+            imagePath: 'assets/images/flood.png',
+            onTap: () {
+              // 洪水の対策画面への処理
+            },
+          ),
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         color: const Color.fromARGB(255, 255, 255, 255),
@@ -184,69 +79,93 @@ class FlowScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  iconSize: 30,
-                  icon: Icon(Icons.newspaper,
-                      color: const Color.fromARGB(255, 0, 0, 0)),
-                  onPressed: () {},
-                ),
-                Text(
-                  'ニュース',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  iconSize: 30,
-                  icon: Icon(Icons.home,
-                      color: const Color.fromARGB(255, 0, 0, 0)),
-                  onPressed: () {},
-                ),
-                Text(
-                  'ホーム',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  iconSize: 30,
-                  icon: Icon(Icons.menu,
-                      color: const Color.fromARGB(255, 0, 0, 0)),
-                  onPressed: () {},
-                ),
-                Text(
-                  'その他',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+            _buildBottomNavItem(Icons.newspaper, 'ニュース', () {}),
+            _buildBottomNavItem(Icons.home, 'ホーム', () {}),
+            _buildBottomNavItem(Icons.menu, 'その他', () {}),
           ],
         ),
       ),
+    );
+  }
+
+  // カードウィジェットを生成する関数
+  Widget _buildOptionCard(
+    BuildContext context, {
+    required String title,
+    required String imagePath,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25), // 影の色
+            blurRadius: 10, // ぼかしの強さ
+            spreadRadius: 2, // 影の広がり
+            offset: Offset(0, 5), // 影の位置（X, Y方向）
+          ),
+        ],
+      ),
+      child: InkWell(
+        onTap: onTap,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30), // 均等な角丸を適用
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Image.asset(
+                imagePath,
+                width: 400, // 幅を設定
+                height: 250, // 高さを設定
+                fit: BoxFit.cover, // 画像を均等に配置
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5), // 背景色を黒に設定（透過あり）
+                    borderRadius: BorderRadius.circular(15), // 同じ角丸を適用
+                  ),
+                  width: double.infinity,
+                  height: 50,
+                  alignment: Alignment.center,
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // BottomNavigationBarのアイテムを生成する関数
+  Widget _buildBottomNavItem(IconData icon, String label, VoidCallback onTap) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          padding: EdgeInsets.zero,
+          iconSize: 30,
+          icon: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
+          onPressed: onTap,
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }

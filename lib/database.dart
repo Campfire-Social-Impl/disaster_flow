@@ -8,14 +8,12 @@ import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 
 part 'database.g.dart';
 
-@DataClassName('flow')
 class FlowRaw extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
   TextColumn get disaster => text()();
 }
 
-@DataClassName('action')
 class ActionRaw extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get flowId => integer().references(FlowRaw, #id)();
@@ -24,7 +22,7 @@ class ActionRaw extends Table {
 }
 
 @DriftDatabase(tables: [FlowRaw, ActionRaw])
-class LocalDatabase extends _$AppDatabase {
+class LocalDatabase extends _$LocalDatabase {
   LocalDatabase() : super(_openConnection());
 
   @override

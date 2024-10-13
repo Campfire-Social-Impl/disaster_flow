@@ -2,6 +2,7 @@
 
 import 'package:disaster_flow/pages/earthflow_page.dart';
 import 'package:disaster_flow/pages/home_page.dart';
+import 'package:disaster_flow/pages/flow_page.dart';
 import 'package:disaster_flow/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         colorScheme: MaterialTheme.darkScheme(),
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      home: EarthFlowScreen(),
     );
   }
 }

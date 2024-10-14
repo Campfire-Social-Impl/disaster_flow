@@ -1,3 +1,4 @@
+//項目別で自身が選択された時の画面
 import 'package:flutter/material.dart';
 
 class EarthFlowScreen extends StatefulWidget {
@@ -12,8 +13,9 @@ class _EarthFlowScreenState extends State<EarthFlowScreen> {
   List<Map<String, String>> sections = [
     {'label': '・避難先', 'hint': '避難場所を入力'},
     {'label': '・避難経路', 'hint': '通る場所、避ける場所(川、海側など)'},
-    {'label': '・連絡先', 'hint': '電話番号、メールアドレス、sns、災害用伝言ダイヤル（171）'},
+    {'label': '・連絡先', 'hint': '電話番号、メールアドレス、SNS、災害用伝言ダイヤル（171）'},
     {'label': '・情報の取り方', 'hint': '情報を摂取できるものをなにか持参しましたか（例：ラジオ)'},
+    {'label': '・その他', 'hint': '何か必要事項の入力'},
   ];
 
   // チェックリストのアイテム
@@ -94,18 +96,17 @@ class _EarthFlowScreenState extends State<EarthFlowScreen> {
                 hintText: section['hint']!,
               ),
 
-            // チェックリスト全体を囲むコンテナ
             const SizedBox(height: 0),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white, // 背景色を白に設定
-                borderRadius: BorderRadius.circular(12), // 角を丸くする
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10.0, // 影のぼかし
-                    spreadRadius: 2.0, // 影の広がり
+                    blurRadius: 10.0,
+                    spreadRadius: 2.0,
                   ),
                 ],
               ),
@@ -154,13 +155,13 @@ class _EarthFlowScreenState extends State<EarthFlowScreen> {
       margin: const EdgeInsets.only(bottom: 20), // 各セクションの間隔を20ピクセルに設定
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white, // 背景色を白に設定
-        borderRadius: BorderRadius.circular(12), // 角を丸くする
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
-            blurRadius: 10.0, // 影のぼかし
-            spreadRadius: 2.0, // 影の広がり
+            blurRadius: 10.0,
+            spreadRadius: 2.0,
           ),
         ],
       ),

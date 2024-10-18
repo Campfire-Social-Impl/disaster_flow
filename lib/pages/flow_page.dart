@@ -65,7 +65,7 @@ class FlowScreen extends StatelessWidget {
           const SizedBox(height: 15),
           _buildOptionCard(
             context,
-            title: '洪水',
+            title: '水害',
             imagePath: 'assets/images/flood.png',
             onTap: () {
               // 洪水の対策画面への処理

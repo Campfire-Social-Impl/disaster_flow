@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:disaster_flow/database.dart';
+import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Flow {
@@ -36,6 +37,41 @@ class FlowListNotifier extends AsyncNotifier<List<Flow>> {
               disaster: e.disaster,
             ))
         .toList();
+  }
+
+  Future<void> get() async {
+    state = const AsyncValue.loading();
+    state = AsyncValue.data(await fetch());
+  }
+
+  Future<void> create(String title, String disaster) async {
+    state = const AsyncValue.loading();
+    await database.into(database.flowRaw).insert(
+          FlowRawCompanion.insert(
+            title: title,
+            disaster: disaster,
+          ),
+        );
+    state = AsyncValue.data(await fetch());
+  }
+
+  Future<void> rewrite(int id, String title, String disaster) async {
+    state = const AsyncValue.loading();
+    await (database.update(database.flowRaw)..where((tbl) => tbl.id.equals(id)))
+        .write(
+      FlowRawCompanion(
+        title: Value(title),
+        disaster: Value(disaster),
+      ),
+    );
+    state = AsyncValue.data(await fetch());
+  }
+
+  Future<void> delete(int id) async {
+    state = const AsyncValue.loading();
+    await (database.delete(database.flowRaw)..where((tbl) => tbl.id.equals(id)))
+        .go();
+    state = AsyncValue.data(await fetch());
   }
 }
 

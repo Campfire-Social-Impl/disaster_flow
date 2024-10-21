@@ -35,6 +35,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  hooks_riverpod: ^2.5.2
+  flutter_hooks: ^0.20.5
+  drift: ^2.20.3
+  drift_flutter: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +50,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  custom_lint: ^0.6.8
+  riverpod_lint: ^2.3.13
+  drift_dev: ^2.20.3
+  build_runner: ^2.4.13
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -58,6 +66,10 @@ flutter:
     - assets/images/check_24.png
     - assets/images/direction.png
     - assets/images/return2.png
+    - assets/images/Arrow.png
+    - assets/images/earthquake.png
+    - assets/images/flood.png
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

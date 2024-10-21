@@ -43,3 +43,5 @@ LazyDatabase _openConnection() {
     return NativeDatabase.createInBackground(file);
   });
 }
+
+final database = LocalDatabase();

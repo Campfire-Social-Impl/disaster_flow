@@ -10,6 +10,12 @@ class FlowScreen extends HookConsumerWidget {
       extendBodyBehindAppBar: false,
       backgroundColor: const Color.fromARGB(255, 245, 244, 244),
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: const Text("テーマ選択"),
         centerTitle: true,
         toolbarHeight: 80,

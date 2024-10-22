@@ -44,15 +44,16 @@ class FlowListNotifier extends AsyncNotifier<List<Flow>> {
     state = AsyncValue.data(await fetch());
   }
 
-  Future<void> create(String title, String disaster) async {
+  Future<int> create(String title, String disaster) async {
     state = const AsyncValue.loading();
-    await database.into(database.flowRaw).insert(
+    final row = await database.into(database.flowRaw).insertReturning(
           FlowRawCompanion.insert(
             title: title,
             disaster: disaster,
           ),
         );
     state = AsyncValue.data(await fetch());
+    return row.id;
   }
 
   Future<void> rewrite(int id, String title, String disaster) async {

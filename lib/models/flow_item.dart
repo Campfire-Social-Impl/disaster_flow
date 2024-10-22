@@ -46,9 +46,9 @@ class FlowItemsNotifier extends AsyncNotifier<List<FlowItem>> {
     state = AsyncValue.data(await fetch(flowId));
   }
 
-  Future<void> create(int flowId, String title, String action) async {
+  Future<int> create(int flowId, String title, String action) async {
     state = const AsyncValue.loading();
-    await database.into(database.actionRaw).insert(
+    final row = await database.into(database.actionRaw).insertReturning(
           ActionRawCompanion.insert(
             flowId: flowId,
             title: title,
@@ -56,6 +56,7 @@ class FlowItemsNotifier extends AsyncNotifier<List<FlowItem>> {
           ),
         );
     state = AsyncValue.data(await fetch(flowId));
+    return row.id;
   }
 
   Future<void> rewrite(int id, String title, String action) async {

@@ -47,7 +47,7 @@ class FlowScreen extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(15), // 均等な角丸を適用
+          borderRadius: BorderRadius.circular(10), // 均等な角丸を適用
           child: Stack(
             alignment: Alignment.center,
             children: [

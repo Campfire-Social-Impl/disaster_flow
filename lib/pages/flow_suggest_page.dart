@@ -24,7 +24,6 @@ class FlowSuggestPage extends HookConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            ref.read(suggestThemeProvider.notifier).state = '';
             Navigator.of(context).pop();
           },
           icon: const Icon(Icons.arrow_back),
@@ -165,8 +164,72 @@ class FlowSuggestPage extends HookConsumerWidget {
   }
 
   Widget buildCompleteBody(BuildContext context, WidgetRef ref) {
+    final suggestTheme = ref.watch(suggestThemeProvider);
+    final suggestList = ref.watch(suggestListProvider(suggestTheme));
+    final suggestIndex = ref.watch(suggestIndexProvider);
+
     return ListView(
-      children: [],
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+          child: Card(
+            color: Colors.white,
+            child: ListTile(
+              minTileHeight: 80,
+              title: Text(
+                "選択中のテーマ：$suggestTheme",
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+          child: Card(
+            color: Colors.white,
+            child: ListTile(
+              minTileHeight: 150,
+              title: Text(
+                '''フローの作成補助は以上です。
+作成を押してフローを作成しましょう。''',
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  onPressed: () {
+                    ref.read(suggestIndexProvider.notifier).state -= 1;
+                  },
+                  child: const Text("戻る"),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  onPressed: () {},
+                  child: const Text("作成"),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

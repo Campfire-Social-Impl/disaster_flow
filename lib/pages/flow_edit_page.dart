@@ -19,7 +19,7 @@ class FlowEditPage extends HookConsumerWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
             child: Card(
               color: Colors.white,
               child: Row(
@@ -38,16 +38,67 @@ class FlowEditPage extends HookConsumerWidget {
               ),
             ),
           ),
+          const Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
+            child: Row(
+              children: [
+                Text("アクション"),
+              ],
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: 20,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 2.0,
+                  ),
                   child: Card(
                     color: Colors.white,
-                    child: ListTile(
-                      title: Text('Item $index'),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Icon(
+                                      Icons.check_circle_outline,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("アクション $index"),
+                                  ),
+                                ],
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text("アクションの説明"),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              color: Colors.red,
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 );

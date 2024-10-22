@@ -1,8 +1,9 @@
+import 'package:disaster_flow/pages/flow_suggest_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ThemeChoiceScreen extends HookConsumerWidget {
-  const ThemeChoiceScreen({super.key});
+class ThemeChoicePage extends HookConsumerWidget {
+  const ThemeChoicePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,13 +32,29 @@ class ThemeChoiceScreen extends HookConsumerWidget {
             context,
             path: "assets/images/earthquake.png",
             title: "地震",
-            onTap: () {},
+            onTap: () {
+              ref.read(suggestThemeProvider.notifier).update((value) => "地震");
+              ref.read(suggestIndexProvider.notifier).state = 0;
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const FlowSuggestPage(),
+                ),
+              );
+            },
           ),
           _buildCard(
             context,
             path: "assets/images/flood.png",
             title: "洪水",
-            onTap: () {},
+            onTap: () {
+              ref.read(suggestThemeProvider.notifier).update((value) => "洪水");
+              ref.read(suggestIndexProvider.notifier).state = 0;
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const FlowSuggestPage(),
+                ),
+              );
+            },
           ),
         ],
       ),

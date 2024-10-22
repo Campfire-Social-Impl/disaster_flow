@@ -58,52 +58,74 @@ class FlowEditPage extends HookConsumerWidget {
                   ),
                   child: Card(
                     color: Colors.white,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Icon(
-                                      Icons.check_circle_outline,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("アクション $index"),
-                                  ),
-                                ],
-                              ),
                               const Padding(
                                 padding: EdgeInsets.all(16.0),
-                                child: Text("アクションの説明"),
+                                child: Icon(
+                                  Icons.check_circle_outline,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("アクション $index"),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: PopupMenuButton(
+                                          itemBuilder: (context) {
+                                        return const [
+                                          PopupMenuItem(
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.edit),
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 16.0,
+                                                  ),
+                                                  child: Text("編集"),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          PopupMenuItem(
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.delete,
+                                                  color: Colors.red,
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 16.0,
+                                                  ),
+                                                  child: Text("削除"),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ];
+                                      }),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {},
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                color: Colors.red,
-                                onPressed: () {},
-                              ),
-                            ],
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text("アクションの説明"),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

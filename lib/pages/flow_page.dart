@@ -6,71 +6,20 @@ class FlowScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: false,
       backgroundColor: const Color.fromARGB(255, 245, 244, 244),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(90.0),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color.fromARGB(255, 255, 220, 81),
-                const Color.fromARGB(255, 255, 214, 49),
-              ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 30.0,
-                spreadRadius: 5.0,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: AppBar(
-            toolbarHeight: 80.0,
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            centerTitle: true,
-            leading: IconButton(
-              iconSize: 30,
-              icon: Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () {
-                // 戻る処理
-              },
-            ),
-            title: Text(
-              'テーマ選択',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 30,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        title: const Text("テーマ選択"),
+        centerTitle: true,
+        toolbarHeight: 80,
+        foregroundColor: Colors.black,
+        backgroundColor: const Color.fromARGB(255, 255, 220, 81),
+        shadowColor: Colors.black.withOpacity(0.2),
+        elevation: 20,
       ),
-      // ListViewを使用してコンテンツをコンパクトに
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 7),
         children: [
-          _buildOptionCard(
-            context,
-            title: '地震',
-            imagePath: 'assets/images/earthquake.png',
-            onTap: () {
-              // 地震の対策画面への処理
-            },
-          ),
-          const SizedBox(height: 15),
-          _buildOptionCard(
-            context,
-            title: '水害',
-            imagePath: 'assets/images/flood.png',
-            onTap: () {
-              // 洪水の対策画面への処理
-            },
-          ),
+          _buildCard(context, "assets/images/earthquake.png", "地震", () {}),
+          _buildCard(context, "assets/images/flood.png", "洪水", () {}),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -83,6 +32,52 @@ class FlowScreen extends StatelessWidget {
             _buildBottomNavItem(Icons.home, 'ホーム', () {}),
             _buildBottomNavItem(Icons.menu, 'その他', () {}),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard(
+    BuildContext context,
+    String path,
+    String title,
+    void Function()? onTap,
+  ) {
+    return Card(
+      child: InkWell(
+        onTap: onTap,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15), // 均等な角丸を適用
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Image.asset(
+                path,
+                width: 400, // 幅を設定
+                height: 250, // 高さを設定
+                fit: BoxFit.cover, // 画像を均等に配置
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                  width: double.infinity,
+                  height: 50,
+                  alignment: Alignment.center,
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

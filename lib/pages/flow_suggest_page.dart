@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final suggestThemeProvider = StateProvider<String>((ref) => '');
 final suggestIndexProvider = StateProvider<int>((ref) => 0);
 final inputTextProvider = StateProvider<List<String>>((ref) {
-  final suggestTheme = ref.watch(suggestThemeProvider);
+  final suggestTheme = ref.watch(suggestThemeProvider.notifier).state;
   final suggestList = ref.watch(suggestListProvider(suggestTheme));
   return suggestList.map((item) => item.defaultText).toList();
 });
@@ -24,6 +24,7 @@ class FlowSuggestPage extends HookConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
+            ref.read(suggestThemeProvider.notifier).state = '';
             Navigator.of(context).pop();
           },
           icon: const Icon(Icons.arrow_back),

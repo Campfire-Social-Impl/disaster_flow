@@ -33,7 +33,6 @@ class ThemeChoicePage extends HookConsumerWidget {
             path: "assets/images/earthquake.png",
             title: "地震",
             onTap: () {
-              ref.read(inputTextProvider.notifier).state = [];
               ref.read(suggestThemeProvider.notifier).update((value) => "地震");
               ref.read(suggestIndexProvider.notifier).state = 0;
               Navigator.of(context).pushReplacement(
@@ -48,7 +47,6 @@ class ThemeChoicePage extends HookConsumerWidget {
             path: "assets/images/flood.png",
             title: "洪水",
             onTap: () {
-              ref.read(inputTextProvider.notifier).state = [];
               ref.read(suggestThemeProvider.notifier).update((value) => "洪水");
               ref.read(suggestIndexProvider.notifier).state = 0;
               Navigator.of(context).pushReplacement(

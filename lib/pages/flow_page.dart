@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class FlowScreen extends StatelessWidget {
+class FlowScreen extends HookConsumerWidget {
+  const FlowScreen({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       extendBodyBehindAppBar: false,
       backgroundColor: const Color.fromARGB(255, 245, 244, 244),

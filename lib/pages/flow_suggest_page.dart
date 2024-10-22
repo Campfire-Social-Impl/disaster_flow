@@ -9,7 +9,6 @@ class FlowSuggestPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('フローの提案'),
         centerTitle: true,

@@ -2,16 +2,21 @@
 
 import 'package:disaster_flow/pages/earthflow_page.dart';
 import 'package:disaster_flow/pages/floodflow_page.dart';
+import 'package:disaster_flow/pages/flow_edit_page.dart';
+import 'package:disaster_flow/pages/flow_suggest_page.dart';
 import 'package:disaster_flow/pages/home_page.dart';
-import 'package:disaster_flow/pages/flow_page.dart';
+import 'package:disaster_flow/pages/theme_choice_page.dart';
 import 'package:disaster_flow/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,11 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: MaterialTheme.lightScheme(),
         useMaterial3: true,
       ),
-      darkTheme: ThemeData(
-        colorScheme: MaterialTheme.darkScheme(),
-        useMaterial3: true,
-      ),
-      home: FlowScreen(),
+      home: FlowEditPage(),
     );
   }
 }

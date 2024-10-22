@@ -1,4 +1,3 @@
-import 'package:disaster_flow/models/suggest.dart';
 import 'package:disaster_flow/pages/flow_suggest_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

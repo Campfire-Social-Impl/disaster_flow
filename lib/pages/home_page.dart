@@ -16,7 +16,6 @@ class HomePage extends HookConsumerWidget {
         foregroundColor: Colors.black,
         backgroundColor: const Color.fromARGB(255, 255, 220, 81),
         shadowColor: Colors.black.withOpacity(0.2),
-        elevation: 20,
       ),
       body: ListView(
         padding: const EdgeInsets.all(10), // パディングを追加
@@ -97,7 +96,6 @@ class HomePage extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
-        elevation: 5,
         child: ListTile(
           leading: Padding(
             padding: const EdgeInsets.all(8.0),

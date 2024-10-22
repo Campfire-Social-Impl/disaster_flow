@@ -7,8 +7,6 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      extendBodyBehindAppBar: false,
-      backgroundColor: const Color.fromARGB(255, 245, 244, 244),
       appBar: AppBar(
         title: const Text('防災フロー'),
         centerTitle: true,

@@ -2,13 +2,13 @@ import 'package:disaster_flow/database.dart';
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Action {
+class FlowItem {
   final int id;
   final int flowId;
   final String title;
   final String action;
 
-  Action({
+  FlowItem({
     required this.id,
     required this.flowId,
     required this.title,
@@ -16,23 +16,23 @@ class Action {
   });
 }
 
-class ActionsNotifier extends AsyncNotifier<List<Action>> {
+class FlowItemsNotifier extends AsyncNotifier<List<FlowItem>> {
   final LocalDatabase database;
 
-  ActionsNotifier({
+  FlowItemsNotifier({
     required this.database,
   }) : super();
 
   @override
-  Future<List<Action>> build() async {
+  Future<List<FlowItem>> build() async {
     return [];
   }
 
-  Future<List<Action>> fetch(int flowId) async {
+  Future<List<FlowItem>> fetch(int flowId) async {
     final actions = await database.select(database.actionRaw).get();
     return actions
         .where((element) => element.flowId == flowId)
-        .map((e) => Action(
+        .map((e) => FlowItem(
               id: e.id,
               flowId: e.flowId,
               title: e.title,
@@ -80,9 +80,9 @@ class ActionsNotifier extends AsyncNotifier<List<Action>> {
   }
 }
 
-final actionsListProvider =
-    AsyncNotifierProvider<ActionsNotifier, List<Action>>(
+final flowItemListProvider =
+    AsyncNotifierProvider<FlowItemsNotifier, List<FlowItem>>(
   () {
-    return ActionsNotifier(database: database);
+    return FlowItemsNotifier(database: database);
   },
 );

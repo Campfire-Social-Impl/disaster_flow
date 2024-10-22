@@ -32,7 +32,7 @@ class HomeScreen extends HookConsumerWidget {
           _buildTile(
             context,
             icon: Icons.settings,
-            title: '災害項目別設定',
+            title: "フローの作成",
             onTap: () {
               debugPrint('災害項目別設定');
             },
@@ -40,7 +40,7 @@ class HomeScreen extends HookConsumerWidget {
           _buildTile(
             context,
             icon: Icons.check,
-            title: '内容確認',
+            title: 'フローの確認',
             onTap: () {
               debugPrint('内容確認');
             },

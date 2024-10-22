@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: MaterialTheme.darkScheme(),
         useMaterial3: true,
       ),
-      home: FloodFlowScreen(),
+      home: FlowScreen(),
     );
   }
 }

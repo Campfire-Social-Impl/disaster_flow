@@ -8,42 +8,14 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: false,
       backgroundColor: const Color.fromARGB(255, 245, 244, 244),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(90.0),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color.fromARGB(255, 255, 220, 81),
-                const Color.fromARGB(255, 255, 214, 49),
-              ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 30.0,
-                spreadRadius: 5.0,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: AppBar(
-            toolbarHeight: 80.0,
-            centerTitle: true,
-            title: Text(
-              "防災フロー",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 30,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-          ),
-        ),
+      appBar: AppBar(
+        title: const Text('防災フロー'),
+        centerTitle: true,
+        toolbarHeight: 80,
+        foregroundColor: Colors.black,
+        backgroundColor: const Color.fromARGB(255, 255, 220, 81),
+        shadowColor: Colors.black.withOpacity(0.2),
+        elevation: 20,
       ),
       body: ListView(
         padding: const EdgeInsets.all(10), // パディングを追加
@@ -149,7 +121,7 @@ class HomeScreen extends StatelessWidget {
         ),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 13,
             fontWeight: FontWeight.w500,

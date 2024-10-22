@@ -23,25 +23,25 @@ class HomeScreen extends HookConsumerWidget {
         children: [
           _buildTile(
             context,
-            Icons.directions_run,
-            '避難',
-            () {
+            icon: Icons.directions_run,
+            title: '避難',
+            onTap: () {
               debugPrint('避難');
             },
           ),
           _buildTile(
             context,
-            Icons.settings,
-            '災害項目別設定',
-            () {
+            icon: Icons.settings,
+            title: '災害項目別設定',
+            onTap: () {
               debugPrint('災害項目別設定');
             },
           ),
           _buildTile(
             context,
-            Icons.check,
-            '内容確認',
-            () {
+            icon: Icons.check,
+            title: '内容確認',
+            onTap: () {
               debugPrint('内容確認');
             },
           ),
@@ -89,11 +89,11 @@ class HomeScreen extends HookConsumerWidget {
   }
 
   Widget _buildTile(
-    BuildContext context,
-    IconData icon,
-    String title,
+    BuildContext context, {
+    required IconData icon,
+    required String title,
     void Function()? onTap,
-  ) {
+  }) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(

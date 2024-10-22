@@ -1,7 +1,5 @@
 //項目別設定
 
-import 'package:disaster_flow/pages/earthflow_page.dart';
-import 'package:disaster_flow/pages/floodflow_page.dart';
 import 'package:disaster_flow/pages/flow_edit_page.dart';
 import 'package:disaster_flow/pages/flow_suggest_page.dart';
 import 'package:disaster_flow/pages/home_page.dart';

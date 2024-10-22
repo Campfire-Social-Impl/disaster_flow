@@ -53,7 +53,7 @@ class FlowEditPage extends HookConsumerWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
+                    horizontal: 16.0,
                     vertical: 2.0,
                   ),
                   child: Card(

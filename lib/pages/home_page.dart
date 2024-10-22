@@ -47,17 +47,43 @@ class HomeScreen extends HookConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color.fromARGB(255, 255, 255, 255),
-        height: 91,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildBottomNavItem(Icons.newspaper, 'ニュース', () {}),
-            _buildBottomNavItem(Icons.home, 'ホーム', () {}),
-            _buildBottomNavItem(Icons.menu, 'その他', () {}),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        fixedColor: Colors.black,
+        unselectedItemColor: Colors.grey[700],
+        iconSize: 30,
+        backgroundColor: Colors.yellow[50],
+        items: const [
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Icon(
+                Icons.newspaper,
+                color: Colors.black,
+              ),
+            ),
+            label: 'ニュース',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Icon(
+                Icons.home,
+                color: Colors.black,
+              ),
+            ),
+            label: 'ホーム',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Icon(
+                Icons.menu,
+                color: Colors.black,
+              ),
+            ),
+            label: 'その他',
+          ),
+        ],
       ),
     );
   }
@@ -106,29 +132,6 @@ class HomeScreen extends HookConsumerWidget {
           onTap: onTap,
         ),
       ),
-    );
-  }
-
-  // BottomNavigationBarのアイテムを生成する関数
-  Widget _buildBottomNavItem(IconData icon, String label, VoidCallback onTap) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          padding: EdgeInsets.zero,
-          iconSize: 30,
-          icon: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
-          onPressed: onTap,
-        ),
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
     );
   }
 }

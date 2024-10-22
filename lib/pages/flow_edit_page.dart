@@ -1,5 +1,14 @@
+import 'package:disaster_flow/models/flow_item.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+final flowIdProvider = StateProvider<int>((ref) => 0);
+final flowItemsProvider = FutureProvider<List<FlowItem>>((ref) async {
+  final flowId = ref.watch(flowIdProvider);
+  await ref.read(flowItemListProvider.notifier).get(flowId);
+  final items = await ref.read(flowItemListProvider.future);
+  return items;
+});
 
 class FlowEditPage extends HookConsumerWidget {
   const FlowEditPage({super.key});

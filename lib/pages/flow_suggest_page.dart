@@ -10,13 +10,18 @@ class FlowSuggestPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
         title: const Text('フローの提案'),
         centerTitle: true,
         toolbarHeight: 80,
         foregroundColor: Colors.black,
         backgroundColor: const Color.fromARGB(255, 255, 220, 81),
         shadowColor: Colors.black.withOpacity(0.2),
-        elevation: 20,
       ),
       body: ListView(
         children: [
@@ -68,6 +73,7 @@ class FlowSuggestPage extends HookConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
+                  minLines: 5,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: '複数行入力可',

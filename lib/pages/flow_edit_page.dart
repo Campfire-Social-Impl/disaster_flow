@@ -8,14 +8,18 @@ class FlowEditPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.arrow_back),
-        title: const Text('防災フロー'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        title: const Text('フローの確認・編集'),
         centerTitle: true,
         toolbarHeight: 80,
         foregroundColor: Colors.black,
         backgroundColor: const Color.fromARGB(255, 255, 220, 81),
         shadowColor: Colors.black.withOpacity(0.2),
-        elevation: 20,
       ),
       body: Column(
         children: [

@@ -1,3 +1,5 @@
+import 'package:disaster_flow/pages/flow_edit_page.dart';
+import 'package:disaster_flow/pages/flow_suggest_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -31,7 +33,11 @@ class HomePage extends HookConsumerWidget {
             icon: Icons.settings,
             title: "フローの作成",
             onTap: () {
-              debugPrint('災害項目別設定');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const FlowSuggestPage(),
+                ),
+              );
             },
           ),
           _buildTile(
@@ -39,7 +45,11 @@ class HomePage extends HookConsumerWidget {
             icon: Icons.check,
             title: 'フローの確認',
             onTap: () {
-              debugPrint('内容確認');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const FlowEditPage(),
+                ),
+              );
             },
           ),
         ],

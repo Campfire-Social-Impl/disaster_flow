@@ -48,26 +48,28 @@ class HomeScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(10), // パディングを追加
         children: [
-          // ボタンを関数で生成
-          _buildButton(
-            title: '避難',
-            iconPath: 'assets/images/Exit_icon.png',
-            onTap: () {
-              // 避難ボタンの処理
+          _buildTile(
+            context,
+            Icons.directions_run,
+            '避難',
+            () {
+              debugPrint('避難');
             },
           ),
-          _buildButton(
-            title: '災害項目別設定',
-            iconPath: 'assets/images/set.png',
-            onTap: () {
-              // 設定ボタンの処理
+          _buildTile(
+            context,
+            Icons.settings,
+            '災害項目別設定',
+            () {
+              debugPrint('災害項目別設定');
             },
           ),
-          _buildButton(
-            title: '内容確認',
-            iconPath: 'assets/images/check_24.png',
-            onTap: () {
-              // 内容確認ボタンの処理
+          _buildTile(
+            context,
+            Icons.check,
+            '内容確認',
+            () {
+              debugPrint('内容確認');
             },
           ),
         ],
@@ -87,74 +89,48 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ボタンを生成する関数
-  Widget _buildButton(
-      {required String title,
-      required String iconPath,
-      required VoidCallback onTap}) {
+  Widget _buildTile(
+    BuildContext context,
+    IconData icon,
+    String title,
+    void Function()? onTap,
+  ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15.0), // ボタン間のスペースを設定
-      child: Container(
-        height: 120,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              const Color.fromARGB(255, 255, 255, 255),
-              const Color.fromARGB(255, 255, 220, 81),
-            ],
-            stops: [0.85, 0.15],
-          ),
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 10.0,
-              spreadRadius: 0.5,
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 5,
+        child: ListTile(
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              icon,
+              color: Colors.black,
+              size: 36,
             ),
-          ],
-        ),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent, // 背景色は透明
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+          ),
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
             ),
-            elevation: 0, // Elevationをゼロに
           ),
-          onPressed: onTap, // 押したときの処理を渡す
-          child: Stack(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 0),
-                  Image.asset(
-                    iconPath,
-                    width: 60,
-                    height: 60,
-                  ),
-                  const SizedBox(width: 40),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                      fontSize: 27,
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                right: -21,
-                top: 0,
-                child: Image.asset(
-                  'assets/images/direction.png',
-                  width: 60,
-                  height: 60,
-                ),
-              ),
-            ],
+          trailing: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.yellow,
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: const Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.black,
+              size: 28,
+            ),
           ),
+          textColor: Colors.black,
+          tileColor: Colors.white,
+          minTileHeight: 100,
+          onTap: onTap,
         ),
       ),
     );

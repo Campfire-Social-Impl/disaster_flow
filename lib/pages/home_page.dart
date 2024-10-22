@@ -105,9 +105,6 @@ class HomePage extends HookConsumerWidget {
           ),
           title: Text(
             title,
-            style: const TextStyle(
-              fontSize: 20,
-            ),
           ),
           trailing: Container(
             width: 50,

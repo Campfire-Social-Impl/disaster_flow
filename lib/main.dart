@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         colorScheme: MaterialTheme.lightScheme(),
         useMaterial3: true,
       ),
-      home: FlowEditPage(),
+      home: HomePage(),
     );
   }
 }

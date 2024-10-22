@@ -7,8 +7,6 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      extendBodyBehindAppBar: false,
-      backgroundColor: const Color.fromARGB(255, 245, 244, 244),
       appBar: AppBar(
         title: const Text('防災フロー'),
         centerTitle: true,
@@ -16,7 +14,6 @@ class HomePage extends HookConsumerWidget {
         foregroundColor: Colors.black,
         backgroundColor: const Color.fromARGB(255, 255, 220, 81),
         shadowColor: Colors.black.withOpacity(0.2),
-        elevation: 20,
       ),
       body: ListView(
         padding: const EdgeInsets.all(10), // パディングを追加
@@ -95,9 +92,8 @@ class HomePage extends HookConsumerWidget {
     void Function()? onTap,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
       child: Card(
-        elevation: 5,
         child: ListTile(
           leading: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -109,9 +105,6 @@ class HomePage extends HookConsumerWidget {
           ),
           title: Text(
             title,
-            style: const TextStyle(
-              fontSize: 20,
-            ),
           ),
           trailing: Container(
             width: 50,
@@ -126,9 +119,12 @@ class HomePage extends HookConsumerWidget {
               size: 28,
             ),
           ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           textColor: Colors.black,
           tileColor: Colors.white,
-          minTileHeight: 100,
+          minTileHeight: 120,
           onTap: onTap,
         ),
       ),

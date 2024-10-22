@@ -21,7 +21,7 @@ class FlowSuggestPage extends HookConsumerWidget {
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
             child: Card(
               color: Colors.white,
               child: ListTile(
@@ -37,7 +37,7 @@ class FlowSuggestPage extends HookConsumerWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
             child: Card(
               color: Colors.white,
               child: ListTile(
@@ -62,7 +62,7 @@ class FlowSuggestPage extends HookConsumerWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
             child: Card(
               color: Colors.white,
               child: Padding(

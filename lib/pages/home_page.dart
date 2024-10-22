@@ -94,7 +94,7 @@ class HomePage extends HookConsumerWidget {
     void Function()? onTap,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
       child: Card(
         child: ListTile(
           leading: Padding(
@@ -124,9 +124,12 @@ class HomePage extends HookConsumerWidget {
               size: 28,
             ),
           ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           textColor: Colors.black,
           tileColor: Colors.white,
-          minTileHeight: 100,
+          minTileHeight: 120,
           onTap: onTap,
         ),
       ),

@@ -8,6 +8,7 @@ class FlowEditPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
+        leading: const Icon(Icons.arrow_back),
         title: const Text('防災フロー'),
         centerTitle: true,
         toolbarHeight: 80,

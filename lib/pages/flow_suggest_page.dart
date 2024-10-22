@@ -1,4 +1,7 @@
+import 'package:disaster_flow/models/flow_item.dart';
+import 'package:disaster_flow/models/flows.dart';
 import 'package:disaster_flow/models/suggest.dart';
+import 'package:disaster_flow/pages/flow_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -166,7 +169,6 @@ class FlowSuggestPage extends HookConsumerWidget {
   Widget buildCompleteBody(BuildContext context, WidgetRef ref) {
     final suggestTheme = ref.watch(suggestThemeProvider);
     final suggestList = ref.watch(suggestListProvider(suggestTheme));
-    final suggestIndex = ref.watch(suggestIndexProvider);
 
     return ListView(
       children: [
@@ -194,7 +196,7 @@ class FlowSuggestPage extends HookConsumerWidget {
               minTileHeight: 150,
               title: Text(
                 '''フローの作成補助は以上です。
-作成を押してフローを作成しましょう。''',
+作成を押してフローを保存しましょう。''',
               ),
             ),
           ),
@@ -222,7 +224,26 @@ class FlowSuggestPage extends HookConsumerWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    final flowId = await ref
+                        .read(flowListProvider.notifier)
+                        .create("$suggestTheme発生時の行動フロー", suggestTheme);
+                    for (final index in List.generate(
+                        suggestList.length, (index) => index)) {
+                      await ref.read(flowItemListProvider.notifier).create(
+                            flowId,
+                            suggestList[index].label,
+                            ref.read(inputTextProvider)[index],
+                          );
+                    }
+                    if (context.mounted) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const FlowEditPage(),
+                        ),
+                      );
+                    }
+                  },
                   child: const Text("作成"),
                 ),
               )

@@ -18,14 +18,14 @@ class FlowEditPage extends HookConsumerWidget {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
             child: Card(
               color: Colors.white,
               child: Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -39,8 +39,7 @@ class FlowEditPage extends HookConsumerWidget {
             ),
           ),
           const Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
+            padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
             child: Row(
               children: [
                 Text("アクション"),
@@ -58,32 +57,36 @@ class FlowEditPage extends HookConsumerWidget {
                   ),
                   child: Card(
                     color: Colors.white,
-                    child: Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Icon(
-                                  Icons.check_circle_outline,
-                                ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Icon(
+                                Icons.check_circle_outline,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text("アクション $index"),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: PopupMenuButton(
-                                          itemBuilder: (context) {
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("アクション $index"),
+                            ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: PopupMenuButton(
+                                      onSelected: (value) {
+                                        debugPrint("Selected: $value");
+                                      },
+                                      icon: const Icon(Icons.more_vert),
+                                      itemBuilder: (context) {
                                         return const [
                                           PopupMenuItem(
+                                            value: "edit",
                                             child: Row(
                                               children: [
                                                 Icon(Icons.edit),
@@ -97,6 +100,7 @@ class FlowEditPage extends HookConsumerWidget {
                                             ),
                                           ),
                                           PopupMenuItem(
+                                            value: "delete",
                                             child: Row(
                                               children: [
                                                 Icon(
@@ -113,19 +117,19 @@ class FlowEditPage extends HookConsumerWidget {
                                             ),
                                           ),
                                         ];
-                                      }),
+                                      },
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text("アクションの説明"),
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text("アクションの説明"),
+                        ),
+                      ],
                     ),
                   ),
                 );

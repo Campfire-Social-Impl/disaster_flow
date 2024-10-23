@@ -1,11 +1,36 @@
+import 'package:disaster_flow/models/flow_item.dart';
+import 'package:disaster_flow/models/flows.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+final flowIdProvider = StateProvider<int>((ref) => 0);
+final flowProvider = FutureProvider<ActionFlow?>((ref) async {
+  final flowId = ref.watch(flowIdProvider);
+  final flows = await ref.watch(actionFlowListProvider.future);
+  final filterdFlows = flows.where((item) => item.id == flowId).toList();
+  if (filterdFlows.isNotEmpty) {
+    return filterdFlows[0];
+  } else {
+    return null;
+  }
+});
+final flowItemsProvider = FutureProvider<List<FlowItem>>((ref) async {
+  final flowId = ref.watch(flowIdProvider);
+  final items = (await ref.watch(flowItemListProvider.future))
+      .where((item) => item.flowId == flowId)
+      .toList();
+  items.sort((a, b) => a.index.compareTo(b.index));
+  return items;
+});
 
 class FlowEditPage extends HookConsumerWidget {
   const FlowEditPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final flow = ref.watch(flowProvider).value;
+    final flowItems = ref.watch(flowItemsProvider).value;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -21,128 +46,170 @@ class FlowEditPage extends HookConsumerWidget {
         backgroundColor: const Color.fromARGB(255, 255, 220, 81),
         shadowColor: Colors.black.withOpacity(0.2),
       ),
-      body: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-            child: Card(
-              color: Colors.white,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: flow != null
+          ? Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 2.0),
+                  child: Card(
+                    color: Colors.white,
+                    child: Row(
                       children: [
-                        Text("テーマ : 水害"),
-                        Text("アクション数 : 10 件"),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("タイトル : ${flow.title}"),
+                              Text("テーマ : ${flow.disaster}"),
+                              Text("アクション数 : ${flowItems!.length} 件"),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
-            child: Row(
-              children: [
-                Text("アクション"),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 20,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 2.0,
+                ),
+                const Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
+                  child: Row(
+                    children: [
+                      Text("アクション"),
+                    ],
                   ),
-                  child: Card(
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Icon(
-                                Icons.check_circle_outline,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("アクション $index"),
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                ),
+                Expanded(
+                  child: ReorderableListView.builder(
+                    itemCount: flowItems.length,
+                    itemBuilder: (context, index) {
+                      final flowItem = flowItems[index];
+                      return Padding(
+                        key: Key(flowItem.id.toString()),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 2.0,
+                        ),
+                        child: Card(
+                          color: Colors.white,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
                                 children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Icon(
+                                      Icons.check_circle_outline,
+                                    ),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: PopupMenuButton(
-                                      onSelected: (value) {
-                                        debugPrint("Selected: $value");
-                                      },
-                                      icon: const Icon(Icons.more_vert),
-                                      itemBuilder: (context) {
-                                        return const [
-                                          PopupMenuItem(
-                                            value: "edit",
-                                            child: Row(
-                                              children: [
-                                                Icon(Icons.edit),
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 16.0,
+                                    child: Text(flowItem.title),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: PopupMenuButton(
+                                            onSelected: (value) async {
+                                              if (value == "edit") {
+                                              } else if (value == "delete") {
+                                                await ref
+                                                    .read(flowItemListProvider
+                                                        .notifier)
+                                                    .delete(
+                                                      flowItem.id,
+                                                      flowItem.flowId,
+                                                    );
+                                              }
+                                            },
+                                            icon: const Icon(Icons.more_vert),
+                                            itemBuilder: (context) {
+                                              return const [
+                                                PopupMenuItem(
+                                                  value: "edit",
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(Icons.edit),
+                                                      Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 16.0,
+                                                        ),
+                                                        child: Text("編集"),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  child: Text("編集"),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          PopupMenuItem(
-                                            value: "delete",
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.delete,
-                                                  color: Colors.red,
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 16.0,
+                                                PopupMenuItem(
+                                                  value: "delete",
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.delete,
+                                                        color: Colors.red,
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 16.0,
+                                                        ),
+                                                        child: Text("削除"),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  child: Text("削除"),
                                                 ),
-                                              ],
-                                            ),
+                                              ];
+                                            },
                                           ),
-                                        ];
-                                      },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                              const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text("アクションの説明"),
+                              ),
+                            ],
+                          ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text("アクションの説明"),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
+                    onReorder: (int oldIndex, int newIndex) async {
+                      debugPrint("Reorder: $oldIndex -> $newIndex");
+                      final ids = flowItems.map((e) => e.id).toList();
+
+                      if (oldIndex < newIndex) {
+                        newIndex -= 1;
+                      }
+                      final int item = ids.removeAt(oldIndex);
+                      ids.insert(newIndex, item);
+
+                      await ref
+                          .read(flowItemListProvider.notifier)
+                          .reorder(ids);
+                      await ref
+                          .read(flowItemListProvider.notifier)
+                          .get(flow.id);
+                      debugPrint("Reorder: $ids");
+                    },
                   ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+                ),
+              ],
+            )
+          : loadingPanel(context),
+    );
+  }
+
+  Widget loadingPanel(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 }

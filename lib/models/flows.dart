@@ -4,34 +4,30 @@ import 'package:disaster_flow/database.dart';
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Flow {
+class ActionFlow {
   final int id;
   final String title;
   final String disaster;
 
-  Flow({
+  ActionFlow({
     required this.id,
     required this.title,
     required this.disaster,
   });
 }
 
-class FlowListNotifier extends AsyncNotifier<List<Flow>> {
-  final LocalDatabase database;
-
-  FlowListNotifier({
-    required this.database,
-  }) : super();
+class ActionFlowListNotifier extends AsyncNotifier<List<ActionFlow>> {
+  ActionFlowListNotifier() : super();
 
   @override
-  Future<List<Flow>> build() async {
-    return [];
+  Future<List<ActionFlow>> build() async {
+    return await fetch();
   }
 
-  Future<List<Flow>> fetch() async {
+  Future<List<ActionFlow>> fetch() async {
     final flows = await database.select(database.flowRaw).get();
     return flows
-        .map((e) => Flow(
+        .map((e) => ActionFlow(
               id: e.id,
               title: e.title,
               disaster: e.disaster,
@@ -41,18 +37,23 @@ class FlowListNotifier extends AsyncNotifier<List<Flow>> {
 
   Future<void> get() async {
     state = const AsyncValue.loading();
-    state = AsyncValue.data(await fetch());
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
   }
 
-  Future<void> create(String title, String disaster) async {
+  Future<int> create(String title, String disaster) async {
     state = const AsyncValue.loading();
-    await database.into(database.flowRaw).insert(
+    final row = await database.into(database.flowRaw).insertReturning(
           FlowRawCompanion.insert(
             title: title,
             disaster: disaster,
           ),
         );
-    state = AsyncValue.data(await fetch());
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
+    return row.id;
   }
 
   Future<void> rewrite(int id, String title, String disaster) async {
@@ -64,19 +65,24 @@ class FlowListNotifier extends AsyncNotifier<List<Flow>> {
         disaster: Value(disaster),
       ),
     );
-    state = AsyncValue.data(await fetch());
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
   }
 
   Future<void> delete(int id) async {
     state = const AsyncValue.loading();
     await (database.delete(database.flowRaw)..where((tbl) => tbl.id.equals(id)))
         .go();
-    state = AsyncValue.data(await fetch());
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
   }
 }
 
-final flowListProvider = AsyncNotifierProvider<FlowListNotifier, List<Flow>>(
+final actionFlowListProvider =
+    AsyncNotifierProvider<ActionFlowListNotifier, List<ActionFlow>>(
   () {
-    return FlowListNotifier(database: database);
+    return ActionFlowListNotifier();
   },
 );

@@ -1,4 +1,7 @@
+import 'package:disaster_flow/models/flow_item.dart';
+import 'package:disaster_flow/models/flows.dart';
 import 'package:disaster_flow/models/suggest.dart';
+import 'package:disaster_flow/pages/flow_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -24,7 +27,6 @@ class FlowSuggestPage extends HookConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            ref.read(suggestThemeProvider.notifier).state = '';
             Navigator.of(context).pop();
           },
           icon: const Icon(Icons.arrow_back),
@@ -165,8 +167,92 @@ class FlowSuggestPage extends HookConsumerWidget {
   }
 
   Widget buildCompleteBody(BuildContext context, WidgetRef ref) {
+    final suggestTheme = ref.watch(suggestThemeProvider);
+    final suggestList = ref.watch(suggestListProvider(suggestTheme));
+
     return ListView(
-      children: [],
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+          child: Card(
+            color: Colors.white,
+            child: ListTile(
+              minTileHeight: 80,
+              title: Text(
+                "選択中のテーマ：$suggestTheme",
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+          child: Card(
+            color: Colors.white,
+            child: ListTile(
+              minTileHeight: 150,
+              title: Text(
+                '''フローの作成補助は以上です。
+作成を押してフローを保存しましょう。''',
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  onPressed: () {
+                    ref.read(suggestIndexProvider.notifier).state -= 1;
+                  },
+                  child: const Text("戻る"),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  onPressed: () async {
+                    final flowId = await ref
+                        .read(actionFlowListProvider.notifier)
+                        .create("$suggestTheme発生時の行動フロー", suggestTheme);
+                    for (final index in List.generate(
+                        suggestList.length, (index) => index)) {
+                      await ref.read(flowItemListProvider.notifier).create(
+                            flowId,
+                            suggestList[index].label,
+                            ref.read(inputTextProvider)[index],
+                            index,
+                          );
+                    }
+                    ref.read(flowIdProvider.notifier).update((value) => flowId);
+                    if (context.mounted) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const FlowEditPage(),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text("作成"),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

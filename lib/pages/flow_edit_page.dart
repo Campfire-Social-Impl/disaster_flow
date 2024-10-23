@@ -129,12 +129,11 @@ class FlowEditPage extends HookConsumerWidget {
                                                   flowItem,
                                                 );
                                               } else if (value == "delete") {
-                                                await ref
-                                                    .read(flowItemListProvider
-                                                        .notifier)
-                                                    .delete(
-                                                      flowItem.id,
-                                                    );
+                                                showDeleteFlowItemDialog(
+                                                  context,
+                                                  ref,
+                                                  flowItem.id,
+                                                );
                                               }
                                             },
                                             icon: const Icon(Icons.more_vert),
@@ -281,6 +280,33 @@ class FlowEditPage extends HookConsumerWidget {
                     );
               },
               child: const Text("保存"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showDeleteFlowItemDialog(BuildContext context, WidgetRef ref, int id) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("アクションの削除"),
+          content: const Text("このアクションを削除しますか？"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("キャンセル"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await ref.read(flowItemListProvider.notifier).delete(id);
+              },
+              child: const Text("削除"),
             ),
           ],
         );

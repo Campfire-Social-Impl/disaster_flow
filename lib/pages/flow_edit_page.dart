@@ -106,7 +106,13 @@ class FlowEditPage extends HookConsumerWidget {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(flowItem.title),
+                                    child: Text(
+                                      flowItem.title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.brown,
+                                      ),
+                                    ),
                                   ),
                                   Expanded(
                                     child: Row(
@@ -117,13 +123,17 @@ class FlowEditPage extends HookConsumerWidget {
                                           child: PopupMenuButton(
                                             onSelected: (value) async {
                                               if (value == "edit") {
+                                                showEditFlowItemDialog(
+                                                  context,
+                                                  ref,
+                                                  flowItem,
+                                                );
                                               } else if (value == "delete") {
                                                 await ref
                                                     .read(flowItemListProvider
                                                         .notifier)
                                                     .delete(
                                                       flowItem.id,
-                                                      flowItem.flowId,
                                                     );
                                               }
                                             },
@@ -172,9 +182,9 @@ class FlowEditPage extends HookConsumerWidget {
                                   ),
                                 ],
                               ),
-                              const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text("アクションの説明"),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(flowItem.action),
                               ),
                             ],
                           ),
@@ -197,7 +207,6 @@ class FlowEditPage extends HookConsumerWidget {
                       await ref
                           .read(flowItemListProvider.notifier)
                           .get(flow.id);
-                      debugPrint("Reorder: $ids");
                     },
                   ),
                 ),
@@ -210,6 +219,72 @@ class FlowEditPage extends HookConsumerWidget {
   Widget loadingPanel(BuildContext context) {
     return const Center(
       child: CircularProgressIndicator(),
+    );
+  }
+
+  void showEditFlowItemDialog(
+      BuildContext context, WidgetRef ref, FlowItem item) {
+    final titleController = TextEditingController(text: item.title);
+    final actionController = TextEditingController(text: item.action);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("アクションの編集"),
+          content: SizedBox(
+            height: 250,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "アクションのタイトル",
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleChildScrollView(
+                      child: TextField(
+                        controller: actionController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'アクションの内容',
+                        ),
+                        minLines: 2,
+                        maxLines: null,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("キャンセル"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await ref.read(flowItemListProvider.notifier).rewrite(
+                      item.id,
+                      titleController.text,
+                      actionController.text,
+                    );
+              },
+              child: const Text("保存"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

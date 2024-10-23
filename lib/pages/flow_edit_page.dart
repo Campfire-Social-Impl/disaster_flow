@@ -197,7 +197,6 @@ class FlowEditPage extends HookConsumerWidget {
                       await ref
                           .read(flowItemListProvider.notifier)
                           .get(flow.id);
-                      debugPrint("Reorder: $ids");
                     },
                   ),
                 ),

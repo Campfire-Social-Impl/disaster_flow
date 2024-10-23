@@ -41,7 +41,9 @@ class FlowItemsNotifier extends AsyncNotifier<List<FlowItem>> {
 
   Future<void> get(int flowId) async {
     state = const AsyncValue.loading();
-    state = AsyncValue.data(await fetch());
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
   }
 
   Future<int> create(int flowId, String title, String action, int index) async {
@@ -102,6 +104,7 @@ class FlowItemsNotifier extends AsyncNotifier<List<FlowItem>> {
             ..where((tbl) => tbl.id.equals(ids[i])))
           .write(
         ActionRawCompanion(
+          id: Value(ids[i]),
           index: Value(i),
         ),
       );

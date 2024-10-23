@@ -19,6 +19,7 @@ final flowItemsProvider = FutureProvider<List<FlowItem>>((ref) async {
   final items = (await ref.watch(flowItemListProvider.future))
       .where((item) => item.flowId == flowId)
       .toList();
+  items.sort((a, b) => a.index.compareTo(b.id));
   return items;
 });
 

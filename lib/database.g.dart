@@ -251,8 +251,13 @@ class $ActionRawTable extends ActionRaw
   late final GeneratedColumn<String> action = GeneratedColumn<String>(
       'action', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _indexMeta = const VerificationMeta('index');
   @override
-  List<GeneratedColumn> get $columns => [id, flowId, title, action];
+  late final GeneratedColumn<int> index = GeneratedColumn<int>(
+      'index', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, flowId, title, action, index];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -284,6 +289,12 @@ class $ActionRawTable extends ActionRaw
     } else if (isInserting) {
       context.missing(_actionMeta);
     }
+    if (data.containsKey('index')) {
+      context.handle(
+          _indexMeta, index.isAcceptableOrUnknown(data['index']!, _indexMeta));
+    } else if (isInserting) {
+      context.missing(_indexMeta);
+    }
     return context;
   }
 
@@ -301,6 +312,8 @@ class $ActionRawTable extends ActionRaw
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       action: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}action'])!,
+      index: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}index'])!,
     );
   }
 
@@ -315,11 +328,13 @@ class ActionRawData extends DataClass implements Insertable<ActionRawData> {
   final int flowId;
   final String title;
   final String action;
+  final int index;
   const ActionRawData(
       {required this.id,
       required this.flowId,
       required this.title,
-      required this.action});
+      required this.action,
+      required this.index});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -327,6 +342,7 @@ class ActionRawData extends DataClass implements Insertable<ActionRawData> {
     map['flow_id'] = Variable<int>(flowId);
     map['title'] = Variable<String>(title);
     map['action'] = Variable<String>(action);
+    map['index'] = Variable<int>(index);
     return map;
   }
 
@@ -336,6 +352,7 @@ class ActionRawData extends DataClass implements Insertable<ActionRawData> {
       flowId: Value(flowId),
       title: Value(title),
       action: Value(action),
+      index: Value(index),
     );
   }
 
@@ -347,6 +364,7 @@ class ActionRawData extends DataClass implements Insertable<ActionRawData> {
       flowId: serializer.fromJson<int>(json['flowId']),
       title: serializer.fromJson<String>(json['title']),
       action: serializer.fromJson<String>(json['action']),
+      index: serializer.fromJson<int>(json['index']),
     );
   }
   @override
@@ -357,16 +375,18 @@ class ActionRawData extends DataClass implements Insertable<ActionRawData> {
       'flowId': serializer.toJson<int>(flowId),
       'title': serializer.toJson<String>(title),
       'action': serializer.toJson<String>(action),
+      'index': serializer.toJson<int>(index),
     };
   }
 
   ActionRawData copyWith(
-          {int? id, int? flowId, String? title, String? action}) =>
+          {int? id, int? flowId, String? title, String? action, int? index}) =>
       ActionRawData(
         id: id ?? this.id,
         flowId: flowId ?? this.flowId,
         title: title ?? this.title,
         action: action ?? this.action,
+        index: index ?? this.index,
       );
   ActionRawData copyWithCompanion(ActionRawCompanion data) {
     return ActionRawData(
@@ -374,6 +394,7 @@ class ActionRawData extends DataClass implements Insertable<ActionRawData> {
       flowId: data.flowId.present ? data.flowId.value : this.flowId,
       title: data.title.present ? data.title.value : this.title,
       action: data.action.present ? data.action.value : this.action,
+      index: data.index.present ? data.index.value : this.index,
     );
   }
 
@@ -383,13 +404,14 @@ class ActionRawData extends DataClass implements Insertable<ActionRawData> {
           ..write('id: $id, ')
           ..write('flowId: $flowId, ')
           ..write('title: $title, ')
-          ..write('action: $action')
+          ..write('action: $action, ')
+          ..write('index: $index')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, flowId, title, action);
+  int get hashCode => Object.hash(id, flowId, title, action, index);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -397,7 +419,8 @@ class ActionRawData extends DataClass implements Insertable<ActionRawData> {
           other.id == this.id &&
           other.flowId == this.flowId &&
           other.title == this.title &&
-          other.action == this.action);
+          other.action == this.action &&
+          other.index == this.index);
 }
 
 class ActionRawCompanion extends UpdateCompanion<ActionRawData> {
@@ -405,31 +428,37 @@ class ActionRawCompanion extends UpdateCompanion<ActionRawData> {
   final Value<int> flowId;
   final Value<String> title;
   final Value<String> action;
+  final Value<int> index;
   const ActionRawCompanion({
     this.id = const Value.absent(),
     this.flowId = const Value.absent(),
     this.title = const Value.absent(),
     this.action = const Value.absent(),
+    this.index = const Value.absent(),
   });
   ActionRawCompanion.insert({
     this.id = const Value.absent(),
     required int flowId,
     required String title,
     required String action,
+    required int index,
   })  : flowId = Value(flowId),
         title = Value(title),
-        action = Value(action);
+        action = Value(action),
+        index = Value(index);
   static Insertable<ActionRawData> custom({
     Expression<int>? id,
     Expression<int>? flowId,
     Expression<String>? title,
     Expression<String>? action,
+    Expression<int>? index,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (flowId != null) 'flow_id': flowId,
       if (title != null) 'title': title,
       if (action != null) 'action': action,
+      if (index != null) 'index': index,
     });
   }
 
@@ -437,12 +466,14 @@ class ActionRawCompanion extends UpdateCompanion<ActionRawData> {
       {Value<int>? id,
       Value<int>? flowId,
       Value<String>? title,
-      Value<String>? action}) {
+      Value<String>? action,
+      Value<int>? index}) {
     return ActionRawCompanion(
       id: id ?? this.id,
       flowId: flowId ?? this.flowId,
       title: title ?? this.title,
       action: action ?? this.action,
+      index: index ?? this.index,
     );
   }
 
@@ -461,6 +492,9 @@ class ActionRawCompanion extends UpdateCompanion<ActionRawData> {
     if (action.present) {
       map['action'] = Variable<String>(action.value);
     }
+    if (index.present) {
+      map['index'] = Variable<int>(index.value);
+    }
     return map;
   }
 
@@ -470,7 +504,8 @@ class ActionRawCompanion extends UpdateCompanion<ActionRawData> {
           ..write('id: $id, ')
           ..write('flowId: $flowId, ')
           ..write('title: $title, ')
-          ..write('action: $action')
+          ..write('action: $action, ')
+          ..write('index: $index')
           ..write(')'))
         .toString();
   }
@@ -654,12 +689,14 @@ typedef $$ActionRawTableCreateCompanionBuilder = ActionRawCompanion Function({
   required int flowId,
   required String title,
   required String action,
+  required int index,
 });
 typedef $$ActionRawTableUpdateCompanionBuilder = ActionRawCompanion Function({
   Value<int> id,
   Value<int> flowId,
   Value<String> title,
   Value<String> action,
+  Value<int> index,
 });
 
 final class $$ActionRawTableReferences
@@ -698,6 +735,11 @@ class $$ActionRawTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<int> get index => $state.composableBuilder(
+      column: $state.table.index,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   $$FlowRawTableFilterComposer get flowId {
     final $$FlowRawTableFilterComposer composer = $state.composerBuilder(
         composer: this,
@@ -726,6 +768,11 @@ class $$ActionRawTableOrderingComposer
 
   ColumnOrderings<String> get action => $state.composableBuilder(
       column: $state.table.action,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get index => $state.composableBuilder(
+      column: $state.table.index,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -766,24 +813,28 @@ class $$ActionRawTableTableManager extends RootTableManager<
             Value<int> flowId = const Value.absent(),
             Value<String> title = const Value.absent(),
             Value<String> action = const Value.absent(),
+            Value<int> index = const Value.absent(),
           }) =>
               ActionRawCompanion(
             id: id,
             flowId: flowId,
             title: title,
             action: action,
+            index: index,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
             required int flowId,
             required String title,
             required String action,
+            required int index,
           }) =>
               ActionRawCompanion.insert(
             id: id,
             flowId: flowId,
             title: title,
             action: action,
+            index: index,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (

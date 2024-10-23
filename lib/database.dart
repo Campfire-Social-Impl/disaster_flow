@@ -19,6 +19,7 @@ class ActionRaw extends Table {
   IntColumn get flowId => integer().references(FlowRaw, #id)();
   TextColumn get title => text()();
   TextColumn get action => text()();
+  IntColumn get index => integer()();
 }
 
 @DriftDatabase(tables: [FlowRaw, ActionRaw])

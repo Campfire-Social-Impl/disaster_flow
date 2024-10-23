@@ -4,34 +4,34 @@ import 'package:disaster_flow/database.dart';
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Flow {
+class ActionFlow {
   final int id;
   final String title;
   final String disaster;
 
-  Flow({
+  ActionFlow({
     required this.id,
     required this.title,
     required this.disaster,
   });
 }
 
-class FlowListNotifier extends AsyncNotifier<List<Flow>> {
+class ActionFlowListNotifier extends AsyncNotifier<List<ActionFlow>> {
   final LocalDatabase database;
 
-  FlowListNotifier({
+  ActionFlowListNotifier({
     required this.database,
   }) : super();
 
   @override
-  Future<List<Flow>> build() async {
+  Future<List<ActionFlow>> build() async {
     return [];
   }
 
-  Future<List<Flow>> fetch() async {
+  Future<List<ActionFlow>> fetch() async {
     final flows = await database.select(database.flowRaw).get();
     return flows
-        .map((e) => Flow(
+        .map((e) => ActionFlow(
               id: e.id,
               title: e.title,
               disaster: e.disaster,
@@ -76,8 +76,9 @@ class FlowListNotifier extends AsyncNotifier<List<Flow>> {
   }
 }
 
-final flowListProvider = AsyncNotifierProvider<FlowListNotifier, List<Flow>>(
+final actionFlowListProvider =
+    AsyncNotifierProvider<ActionFlowListNotifier, List<ActionFlow>>(
   () {
-    return FlowListNotifier(database: database);
+    return ActionFlowListNotifier(database: database);
   },
 );

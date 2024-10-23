@@ -134,7 +134,6 @@ class FlowEditPage extends HookConsumerWidget {
                                                         .notifier)
                                                     .delete(
                                                       flowItem.id,
-                                                      flowItem.flowId,
                                                     );
                                               }
                                             },
@@ -273,8 +272,13 @@ class FlowEditPage extends HookConsumerWidget {
               child: const Text("キャンセル"),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop();
+                await ref.read(flowItemListProvider.notifier).rewrite(
+                      item.id,
+                      titleController.text,
+                      actionController.text,
+                    );
               },
               child: const Text("保存"),
             ),

@@ -87,7 +87,12 @@ class FlowEditPage extends HookConsumerWidget {
                                 flowItems.length,
                               );
                         },
-                        child: const Text("アクションの追加"),
+                        child: const Text(
+                          "アクションの追加",
+                          style: TextStyle(
+                            color: Colors.brown,
+                          ),
+                        ),
                       ),
                     ],
                   ),

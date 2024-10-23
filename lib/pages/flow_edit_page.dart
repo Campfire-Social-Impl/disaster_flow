@@ -71,12 +71,24 @@ class FlowEditPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 32.0, vertical: 8.0),
                   child: Row(
                     children: [
-                      Text("アクション"),
+                      const Text("アクション"),
+                      const Spacer(),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await ref.read(flowItemListProvider.notifier).create(
+                                flow.id,
+                                "新しいアクション",
+                                "行動の追加",
+                                flowItems.length,
+                              );
+                        },
+                        child: const Text("アクションの追加"),
+                      ),
                     ],
                   ),
                 ),

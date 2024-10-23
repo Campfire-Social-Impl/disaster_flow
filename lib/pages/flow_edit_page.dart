@@ -117,6 +117,11 @@ class FlowEditPage extends HookConsumerWidget {
                                           child: PopupMenuButton(
                                             onSelected: (value) async {
                                               if (value == "edit") {
+                                                showEditFlowItemDialog(
+                                                  context,
+                                                  ref,
+                                                  flowItem,
+                                                );
                                               } else if (value == "delete") {
                                                 await ref
                                                     .read(flowItemListProvider
@@ -172,9 +177,9 @@ class FlowEditPage extends HookConsumerWidget {
                                   ),
                                 ],
                               ),
-                              const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text("アクションの説明"),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(flowItem.action),
                               ),
                             ],
                           ),
@@ -209,6 +214,59 @@ class FlowEditPage extends HookConsumerWidget {
   Widget loadingPanel(BuildContext context) {
     return const Center(
       child: CircularProgressIndicator(),
+    );
+  }
+
+  void showEditFlowItemDialog(
+      BuildContext context, WidgetRef ref, FlowItem item) {
+    final titleController = TextEditingController(text: item.title);
+    final actionController = TextEditingController(text: item.action);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("アクションの編集"),
+          content: SizedBox(
+            height: 200,
+            child: Column(
+              children: [
+                Form(
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: titleController,
+                        decoration: const InputDecoration(
+                          labelText: "アクションのタイトル",
+                        ),
+                      ),
+                      TextFormField(
+                        controller: actionController,
+                        decoration: const InputDecoration(
+                          labelText: "アクションの説明",
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("キャンセル"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("保存"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

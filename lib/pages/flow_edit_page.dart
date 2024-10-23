@@ -106,7 +106,13 @@ class FlowEditPage extends HookConsumerWidget {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(flowItem.title),
+                                    child: Text(
+                                      flowItem.title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.brown,
+                                      ),
+                                    ),
                                   ),
                                   Expanded(
                                     child: Row(
@@ -227,25 +233,33 @@ class FlowEditPage extends HookConsumerWidget {
         return AlertDialog(
           title: const Text("アクションの編集"),
           content: SizedBox(
-            height: 200,
+            height: 250,
             child: Column(
               children: [
-                Form(
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: titleController,
-                        decoration: const InputDecoration(
-                          labelText: "アクションのタイトル",
-                        ),
-                      ),
-                      TextFormField(
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "アクションのタイトル",
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SingleChildScrollView(
+                      child: TextField(
                         controller: actionController,
                         decoration: const InputDecoration(
-                          labelText: "アクションの説明",
+                          border: OutlineInputBorder(),
+                          labelText: 'アクションの内容',
                         ),
+                        minLines: 2,
+                        maxLines: null,
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ],

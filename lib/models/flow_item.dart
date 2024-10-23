@@ -62,7 +62,7 @@ class FlowItemsNotifier extends AsyncNotifier<List<FlowItem>> {
     return row.id;
   }
 
-  Future<void> rewrite(int id, int flowId, String title, String action) async {
+  Future<void> rewrite(int id, String title, String action) async {
     state = const AsyncValue.loading();
     await (database.update(database.actionRaw)
           ..where((tbl) => tbl.id.equals(id)))
@@ -77,7 +77,7 @@ class FlowItemsNotifier extends AsyncNotifier<List<FlowItem>> {
     });
   }
 
-  Future<void> delete(int id, int flowId) async {
+  Future<void> delete(int id) async {
     state = const AsyncValue.loading();
     await (database.delete(database.actionRaw)
           ..where((tbl) => tbl.id.equals(id)))

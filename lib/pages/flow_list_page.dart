@@ -127,13 +127,38 @@ class FlowListPage extends HookConsumerWidget {
   void showEditFlowDialog(
       BuildContext context, WidgetRef ref, ActionFlow flow) {
     final titleController = TextEditingController(text: flow.title);
+    final disasterController = TextEditingController(text: flow.disaster);
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("タイトルの編集"),
-          content: TextField(
-            controller: titleController,
+          title: const Text("フロー情報の編集"),
+          content: SizedBox(
+            height: 150,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "タイトル",
+                    ),
+                    controller: titleController,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "災害の種類",
+                    ),
+                    controller: disasterController,
+                  ),
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -145,9 +170,11 @@ class FlowListPage extends HookConsumerWidget {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                await ref
-                    .read(actionFlowListProvider.notifier)
-                    .rewrite(flow.id, titleController.text, flow.disaster);
+                await ref.read(actionFlowListProvider.notifier).rewrite(
+                      flow.id,
+                      titleController.text,
+                      disasterController.text,
+                    );
               },
               child: const Text("編集"),
             ),

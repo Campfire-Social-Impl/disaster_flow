@@ -78,32 +78,6 @@ class ActionFlowListNotifier extends AsyncNotifier<List<ActionFlow>> {
       return await fetch();
     });
   }
-
-  Future<void> deleteAll(int flowId) async {
-    state = const AsyncValue.loading();
-    await (database.delete(database.actionRaw)
-          ..where((tbl) => tbl.flowId.equals(flowId)))
-        .go();
-    state = await AsyncValue.guard(() async {
-      return await fetch();
-    });
-  }
-
-  Future<void> reorder(List<int> ids) async {
-    state = const AsyncValue.loading();
-    for (var i = 0; i < ids.length; i++) {
-      await (database.update(database.actionRaw)
-            ..where((tbl) => tbl.id.equals(ids[i])))
-          .write(
-        ActionRawCompanion(
-          index: Value(i),
-        ),
-      );
-    }
-    state = await AsyncValue.guard(() async {
-      return await fetch();
-    });
-  }
 }
 
 final actionFlowListProvider =

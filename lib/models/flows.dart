@@ -17,15 +17,11 @@ class ActionFlow {
 }
 
 class ActionFlowListNotifier extends AsyncNotifier<List<ActionFlow>> {
-  final LocalDatabase database;
-
-  ActionFlowListNotifier({
-    required this.database,
-  }) : super();
+  ActionFlowListNotifier() : super();
 
   @override
   Future<List<ActionFlow>> build() async {
-    return [];
+    return await fetch();
   }
 
   Future<List<ActionFlow>> fetch() async {
@@ -41,7 +37,9 @@ class ActionFlowListNotifier extends AsyncNotifier<List<ActionFlow>> {
 
   Future<void> get() async {
     state = const AsyncValue.loading();
-    state = AsyncValue.data(await fetch());
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
   }
 
   Future<int> create(String title, String disaster) async {
@@ -52,7 +50,9 @@ class ActionFlowListNotifier extends AsyncNotifier<List<ActionFlow>> {
             disaster: disaster,
           ),
         );
-    state = AsyncValue.data(await fetch());
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
     return row.id;
   }
 
@@ -65,20 +65,50 @@ class ActionFlowListNotifier extends AsyncNotifier<List<ActionFlow>> {
         disaster: Value(disaster),
       ),
     );
-    state = AsyncValue.data(await fetch());
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
   }
 
   Future<void> delete(int id) async {
     state = const AsyncValue.loading();
     await (database.delete(database.flowRaw)..where((tbl) => tbl.id.equals(id)))
         .go();
-    state = AsyncValue.data(await fetch());
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
+  }
+
+  Future<void> deleteAll(int flowId) async {
+    state = const AsyncValue.loading();
+    await (database.delete(database.actionRaw)
+          ..where((tbl) => tbl.flowId.equals(flowId)))
+        .go();
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
+  }
+
+  Future<void> reorder(List<int> ids) async {
+    state = const AsyncValue.loading();
+    for (var i = 0; i < ids.length; i++) {
+      await (database.update(database.actionRaw)
+            ..where((tbl) => tbl.id.equals(ids[i])))
+          .write(
+        ActionRawCompanion(
+          index: Value(i),
+        ),
+      );
+    }
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
   }
 }
 
 final actionFlowListProvider =
     AsyncNotifierProvider<ActionFlowListNotifier, List<ActionFlow>>(
   () {
-    return ActionFlowListNotifier(database: database);
+    return ActionFlowListNotifier();
   },
 );

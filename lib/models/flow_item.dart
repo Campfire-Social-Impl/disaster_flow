@@ -7,59 +7,60 @@ class FlowItem {
   final int flowId;
   final String title;
   final String action;
+  final int index;
 
   FlowItem({
     required this.id,
     required this.flowId,
     required this.title,
     required this.action,
+    required this.index,
   });
 }
 
 class FlowItemsNotifier extends AsyncNotifier<List<FlowItem>> {
-  final LocalDatabase database;
-
-  FlowItemsNotifier({
-    required this.database,
-  }) : super();
+  FlowItemsNotifier() : super();
 
   @override
   Future<List<FlowItem>> build() async {
     return [];
   }
 
-  Future<List<FlowItem>> fetch(int flowId) async {
+  Future<List<FlowItem>> fetch() async {
     final actions = await database.select(database.actionRaw).get();
     return actions
-        .where((element) => element.flowId == flowId)
         .map((e) => FlowItem(
               id: e.id,
               flowId: e.flowId,
               title: e.title,
               action: e.action,
+              index: e.index,
             ))
         .toList();
   }
 
   Future<void> get(int flowId) async {
     state = const AsyncValue.loading();
-    state = AsyncValue.data(await fetch(flowId));
+    state = AsyncValue.data(await fetch());
   }
 
-  Future<int> create(int flowId, String title, String action) async {
+  Future<int> create(int flowId, String title, String action, int index) async {
     state = const AsyncValue.loading();
     final row = await database.into(database.actionRaw).insertReturning(
           ActionRawCompanion.insert(
             flowId: flowId,
             title: title,
             action: action,
+            index: index,
           ),
         );
-    state = AsyncValue.data(await fetch(flowId));
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
     return row.id;
   }
 
-  Future<void> rewrite(int id, String title, String action) async {
+  Future<void> rewrite(int id, int flowId, String title, String action) async {
     state = const AsyncValue.loading();
     await (database.update(database.actionRaw)
           ..where((tbl) => tbl.id.equals(id)))
@@ -69,21 +70,25 @@ class FlowItemsNotifier extends AsyncNotifier<List<FlowItem>> {
         action: Value(action),
       ),
     );
-    state = AsyncValue.data(await fetch(id));
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
   }
 
-  Future<void> delete(int id) async {
+  Future<void> delete(int id, int flowId) async {
     state = const AsyncValue.loading();
     await (database.delete(database.actionRaw)
           ..where((tbl) => tbl.id.equals(id)))
         .go();
-    state = AsyncValue.data(await fetch(id));
+    state = await AsyncValue.guard(() async {
+      return await fetch();
+    });
   }
 }
 
 final flowItemListProvider =
     AsyncNotifierProvider<FlowItemsNotifier, List<FlowItem>>(
   () {
-    return FlowItemsNotifier(database: database);
+    return FlowItemsNotifier();
   },
 );

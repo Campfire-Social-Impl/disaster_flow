@@ -1,4 +1,6 @@
+import 'package:disaster_flow/models/flow_item.dart';
 import 'package:disaster_flow/models/flows.dart';
+import 'package:disaster_flow/pages/flow_edit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -31,23 +33,83 @@ class FlowListPage extends HookConsumerWidget {
           ? ListView.builder(
               itemCount: ref.watch(flowsProvider).value!.length,
               itemBuilder: (context, index) {
-                final flowItem = ref.read(flowsProvider).value![index];
+                final flow = ref.read(flowsProvider).value![index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 8.0, vertical: 2.0),
                   child: Card(
                     child: ListTile(
                       leading: const Icon(Icons.directions_run),
-                      title: Text(flowItem.title),
+                      title: Text(flow.title),
                       subtitle: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          flowItem.disaster,
+                          flow.disaster,
                           style: TextStyle(
                             color: Colors.brown[500],
                           ),
                         ),
                       ),
+                      trailing: PopupMenuButton(
+                        onSelected: (value) {
+                          if (value == "edit") {
+                          } else if (value == "delete") {
+                            ref
+                                .read(actionFlowListProvider.notifier)
+                                .delete(flow.id);
+                          }
+                        },
+                        itemBuilder: (context) {
+                          return const [
+                            PopupMenuItem(
+                              value: "edit",
+                              child: Row(
+                                children: [
+                                  Icon(Icons.edit),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                    ),
+                                    child: Text("編集"),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: "delete",
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                    ),
+                                    child: Text("削除"),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ];
+                        },
+                      ),
+                      onTap: () async {
+                        ref
+                            .read(flowIdProvider.notifier)
+                            .update((value) => flow.id);
+                        await ref
+                            .read(flowItemListProvider.notifier)
+                            .get(flow.id);
+                        if (context.mounted) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const FlowEditPage(),
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ),
                 );

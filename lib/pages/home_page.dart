@@ -1,3 +1,4 @@
+import 'package:disaster_flow/models/flows.dart';
 import 'package:disaster_flow/pages/flow_list_page.dart';
 import 'package:disaster_flow/pages/theme_choice_page.dart';
 import 'package:flutter/material.dart';
@@ -44,12 +45,15 @@ class HomePage extends HookConsumerWidget {
             context,
             icon: Icons.check,
             title: 'フローの確認',
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const FlowListPage(),
-                ),
-              );
+            onTap: () async {
+              await ref.read(actionFlowListProvider.notifier).get();
+              if (context.mounted) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const FlowListPage(),
+                  ),
+                );
+              }
             },
           ),
         ],

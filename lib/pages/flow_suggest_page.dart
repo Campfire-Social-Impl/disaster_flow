@@ -226,7 +226,7 @@ class FlowSuggestPage extends HookConsumerWidget {
                   ),
                   onPressed: () async {
                     final flowId = await ref
-                        .read(flowListProvider.notifier)
+                        .read(actionFlowListProvider.notifier)
                         .create("$suggestTheme発生時の行動フロー", suggestTheme);
                     for (final index in List.generate(
                         suggestList.length, (index) => index)) {
@@ -234,8 +234,10 @@ class FlowSuggestPage extends HookConsumerWidget {
                             flowId,
                             suggestList[index].label,
                             ref.read(inputTextProvider)[index],
+                            index,
                           );
                     }
+                    ref.read(flowIdProvider.notifier).update((value) => flowId);
                     if (context.mounted) {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(

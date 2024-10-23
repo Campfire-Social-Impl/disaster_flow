@@ -53,10 +53,9 @@ class FlowListPage extends HookConsumerWidget {
                       trailing: PopupMenuButton(
                         onSelected: (value) {
                           if (value == "edit") {
+                            showEditFlowDialog(context, ref, flow);
                           } else if (value == "delete") {
-                            ref
-                                .read(actionFlowListProvider.notifier)
-                                .delete(flow.id);
+                            showDeleteFlowDialog(context, ref, flow.id);
                           }
                         },
                         itemBuilder: (context) {
@@ -122,6 +121,66 @@ class FlowListPage extends HookConsumerWidget {
   Widget loadingPanel(BuildContext context) {
     return const Center(
       child: CircularProgressIndicator(),
+    );
+  }
+
+  void showEditFlowDialog(
+      BuildContext context, WidgetRef ref, ActionFlow flow) {
+    final titleController = TextEditingController(text: flow.title);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("タイトルの編集"),
+          content: TextField(
+            controller: titleController,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("キャンセル"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await ref
+                    .read(actionFlowListProvider.notifier)
+                    .rewrite(flow.id, titleController.text, flow.disaster);
+              },
+              child: const Text("編集"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showDeleteFlowDialog(BuildContext context, WidgetRef ref, int id) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("フローを削除しますか？"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("キャンセル"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await ref.read(actionFlowListProvider.notifier).delete(id);
+                await ref.read(flowItemListProvider.notifier).deleteAll(id);
+              },
+              child: const Text("削除"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

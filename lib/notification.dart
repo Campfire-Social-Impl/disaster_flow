@@ -39,6 +39,13 @@ Future<void> firebaseMessagingConfigure() async {
 Future<void> initializeLocalNotification() async {
   final notificationPlugin = FlutterLocalNotificationsPlugin();
 
+  notificationPlugin.initialize(
+    const InitializationSettings(
+      android: AndroidInitializationSettings("@mipmap/ic_launcher"),
+      iOS: DarwinInitializationSettings(),
+    ),
+  );
+
   if (Platform.isAndroid) {
     final androidImpl =
         notificationPlugin.resolvePlatformSpecificImplementation<
@@ -46,14 +53,6 @@ Future<void> initializeLocalNotification() async {
     await androidImpl?.createNotificationChannel(androidChannel);
     await androidImpl?.requestNotificationsPermission();
   } else if (Platform.isIOS) {}
-
-  notificationPlugin.initialize(
-    const InitializationSettings(
-      android: AndroidInitializationSettings("app_icon"),
-      iOS: DarwinInitializationSettings(),
-    ),
-    onDidReceiveBackgroundNotificationResponse: (details) {},
-  );
 }
 
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
@@ -98,4 +97,88 @@ void foregroundMessageHandler(RemoteMessage message) {
       ),
     ),
   );
+}
+
+class DisasterMessageData {
+  final String id;
+  final String type;
+  final dynamic data;
+
+  DisasterMessageData({
+    required this.id,
+    required this.type,
+    required this.data,
+  });
+
+  factory DisasterMessageData.fromMap(Map<String, dynamic> map) {
+    return DisasterMessageData(
+      id: map["id"],
+      type: map["type"],
+      data: map["data"],
+    );
+  }
+}
+
+class EarthquakeData {
+  final double latitude;
+  final double longitude;
+  final double radius;
+  final double magnitude;
+  final double depth;
+  final double maxScale;
+  final String place;
+  final DateTime time;
+
+  EarthquakeData({
+    required this.latitude,
+    required this.longitude,
+    required this.radius,
+    required this.magnitude,
+    required this.depth,
+    required this.maxScale,
+    required this.place,
+    required this.time,
+  });
+
+  factory EarthquakeData.fromMap(Map<String, dynamic> map) {
+    return EarthquakeData(
+      latitude: map["latitude"],
+      longitude: map["longitude"],
+      radius: map["radius"],
+      magnitude: map["magnitude"],
+      depth: map["depth"],
+      maxScale: map["max_scale"],
+      place: map["place"],
+      time: DateTime.parse(map["time"]),
+    );
+  }
+}
+
+class FloodData {
+  final double latitude;
+  final double longitude;
+  final double radius;
+  final String river;
+  final String place;
+  final DateTime time;
+
+  FloodData({
+    required this.latitude,
+    required this.longitude,
+    required this.radius,
+    required this.river,
+    required this.place,
+    required this.time,
+  });
+
+  factory FloodData.fromMap(Map<String, dynamic> map) {
+    return FloodData(
+      latitude: map["latitude"],
+      longitude: map["longitude"],
+      radius: map["radius"],
+      river: map["river"],
+      place: map["place"],
+      time: DateTime.parse(map["time"]),
+    );
+  }
 }

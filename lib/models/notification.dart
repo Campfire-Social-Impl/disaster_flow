@@ -61,6 +61,8 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
     return;
   }
 
+  // TODO: add disaster details handling
+
   final notificationPlugin = FlutterLocalNotificationsPlugin();
   notificationPlugin.show(
     0,
@@ -80,6 +82,8 @@ void foregroundMessageHandler(RemoteMessage message) {
   if (message.data.isEmpty) {
     return;
   }
+
+  // TODO: add disaster details handling
 
   final notificationPlugin = FlutterLocalNotificationsPlugin();
   notificationPlugin.show(

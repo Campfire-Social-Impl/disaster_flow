@@ -1,4 +1,5 @@
 import 'package:disaster_flow/firebase_options.dart';
+import 'package:disaster_flow/models/notification.dart';
 import 'package:disaster_flow/pages/home_page.dart';
 import 'package:disaster_flow/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +12,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await firebaseMessagingConfigure();
 
   runApp(const ProviderScope(child: MyApp()));
 }

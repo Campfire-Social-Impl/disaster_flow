@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -29,6 +30,7 @@ Future<void> firebaseMessagingConfigure() async {
   );
 
   messaging.subscribeToTopic("disaster");
+  messaging.getToken().then((value) => debugPrint("Token: $value"));
 
   await initializeLocalNotification();
 
@@ -56,6 +58,8 @@ Future<void> initializeLocalNotification() async {
 }
 
 Future<void> backgroundMessageHandler(RemoteMessage message) async {
+  debugMessageHandler(message);
+
   if (message.data.isEmpty) {
     return;
   }
@@ -78,6 +82,8 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
 }
 
 void foregroundMessageHandler(RemoteMessage message) {
+  debugMessageHandler(message);
+
   if (message.data.isEmpty) {
     return;
   }
@@ -97,6 +103,32 @@ void foregroundMessageHandler(RemoteMessage message) {
       ),
     ),
   );
+}
+
+void debugMessageHandler(RemoteMessage message) {
+  debugPrint("Message ID: ${message.messageId}");
+  debugPrint("Message Type: ${message.messageType}");
+  debugPrint("Message Notification: ${message.notification}");
+  debugPrint("Message Title: ${message.notification?.title}");
+  debugPrint("Message Body: ${message.notification?.body}");
+  debugPrint("Message Data: ${message.data}");
+  debugPrint("Message Sent Time: ${message.sentTime}");
+
+  if (message.notification != null) {
+    final notificationPlugin = FlutterLocalNotificationsPlugin();
+    notificationPlugin.show(
+      0,
+      message.notification?.title,
+      message.notification?.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          androidChannel.id,
+          androidChannel.name,
+          importance: Importance.max,
+        ),
+      ),
+    );
+  }
 }
 
 class DisasterMessageData {

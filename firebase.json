@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"disaster-notify","appId":"1:93278819338:android:61a9c4dad2f7af15073bf3","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"disaster-notify","configurations":{"android":"1:93278819338:android:61a9c4dad2f7af15073bf3","ios":"1:93278819338:ios:bfc18676c089d47c073bf3"}}}}}}

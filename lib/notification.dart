@@ -174,12 +174,12 @@ class EarthquakeData {
 
   factory EarthquakeData.fromMap(Map<String, dynamic> map) {
     return EarthquakeData(
-      latitude: map["latitude"],
-      longitude: map["longitude"],
-      radius: map["radius"],
-      magnitude: map["magnitude"],
-      depth: map["depth"],
-      maxScale: map["max_scale"],
+      latitude: double.parse(map["latitude"]),
+      longitude: double.parse(map["longitude"]),
+      radius: double.parse(map["radius"]),
+      magnitude: double.parse(map["magnitude"]),
+      depth: double.parse(map["depth"]),
+      maxScale: double.parse(map["max_scale"]),
       place: map["place"],
       time: DateTime.parse(map["time"]),
     );
@@ -205,9 +205,9 @@ class FloodData {
 
   factory FloodData.fromMap(Map<String, dynamic> map) {
     return FloodData(
-      latitude: map["latitude"],
-      longitude: map["longitude"],
-      radius: map["radius"],
+      latitude: double.parse(map["latitude"]),
+      longitude: double.parse(map["longitude"]),
+      radius: double.parse(map["radius"]),
       river: map["river"],
       place: map["place"],
       time: DateTime.parse(map["time"]),

@@ -186,29 +186,26 @@ class EarthquakeData {
   }
 }
 
-class FloodData {
+class RainData {
   final double latitude;
   final double longitude;
   final double radius;
-  final String river;
   final String place;
   final DateTime time;
 
-  FloodData({
+  RainData({
     required this.latitude,
     required this.longitude,
     required this.radius,
-    required this.river,
     required this.place,
     required this.time,
   });
 
-  factory FloodData.fromMap(Map<String, dynamic> map) {
-    return FloodData(
+  factory RainData.fromMap(Map<String, dynamic> map) {
+    return RainData(
       latitude: double.parse(map["latitude"]),
       longitude: double.parse(map["longitude"]),
       radius: double.parse(map["radius"]),
-      river: map["river"],
       place: map["place"],
       time: DateTime.parse(map["time"]),
     );

@@ -22,7 +22,18 @@ class ActionRaw extends Table {
   IntColumn get index => integer()();
 }
 
-@DriftDatabase(tables: [FlowRaw, ActionRaw])
+class NotifyRaw extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get disaster => text()();
+  TextColumn get description => text()();
+  RealColumn get longitute => real()();
+  RealColumn get latitude => real()();
+  RealColumn get radius => real()();
+  DateTimeColumn get time => dateTime()();
+  BoolColumn get addressed => boolean().withDefault(const Constant(false))();
+}
+
+@DriftDatabase(tables: [FlowRaw, ActionRaw, NotifyRaw])
 class LocalDatabase extends _$LocalDatabase {
   LocalDatabase() : super(_openConnection());
 

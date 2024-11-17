@@ -1,4 +1,5 @@
 import 'package:disaster_flow/models/notify.dart';
+import 'package:disaster_flow/utils/time.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -43,11 +44,22 @@ class NotifySelectPage extends HookConsumerWidget {
                           title: Text(notify.disaster),
                           subtitle: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              notify.description,
-                              style: TextStyle(
-                                color: Colors.brown[500],
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  notify.description,
+                                  style: TextStyle(
+                                    color: Colors.brown[500],
+                                  ),
+                                ),
+                                Text(
+                                  "時刻 : ${toTimeString(notify.time)}",
+                                  style: TextStyle(
+                                    color: Colors.brown[500],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

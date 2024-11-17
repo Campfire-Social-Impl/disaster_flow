@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:disaster_flow/database.dart';
+import 'package:disaster_flow/utils/distance.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:location/location.dart';
 
 const AndroidNotificationChannel androidChannel = AndroidNotificationChannel(
   "disaster-notify",
@@ -64,21 +67,20 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
     return;
   }
 
-  // TODO: add disaster details handling
-
-  final notificationPlugin = FlutterLocalNotificationsPlugin();
-  notificationPlugin.show(
-    0,
-    "災害発生の通知",
-    "通知をタップして避難に移行する。", // TODO: add disaster description
-    NotificationDetails(
-      android: AndroidNotificationDetails(
-        androidChannel.id,
-        androidChannel.name,
-        importance: Importance.max,
-      ),
-    ),
-  );
+  // filter disaster
+  final disaster = DisasterMessageData.fromMap(message.data);
+  if (disaster.type == "earthquake") {
+    final data = EarthquakeData.fromMap(message.data);
+    debugPrint("Earthquake: ${data.place}");
+    notifyEarthquake(message.data);
+  } else if (disaster.type == "rain") {
+    final data = RainData.fromMap(message.data);
+    debugPrint("Rain: ${data.place}");
+    notifyRain(message.data);
+  } else {
+    debugPrint("Unknown disaster type: ${disaster.type}");
+    return;
+  }
 }
 
 void foregroundMessageHandler(RemoteMessage message) {
@@ -88,21 +90,21 @@ void foregroundMessageHandler(RemoteMessage message) {
     return;
   }
 
-  // TODO: add disaster details handling
+  // filter disaster
+  final disaster = DisasterMessageData.fromMap(message.data);
 
-  final notificationPlugin = FlutterLocalNotificationsPlugin();
-  notificationPlugin.show(
-    0,
-    "災害発生の通知",
-    "通知をタップして避難に移行する。", // TODO: add disaster description
-    NotificationDetails(
-      android: AndroidNotificationDetails(
-        androidChannel.id,
-        androidChannel.name,
-        importance: Importance.max,
-      ),
-    ),
-  );
+  if (disaster.type == "earthquake") {
+    final data = EarthquakeData.fromMap(message.data);
+    debugPrint("Earthquake: ${data.place}");
+    notifyEarthquake(message.data);
+  } else if (disaster.type == "rain") {
+    final data = RainData.fromMap(message.data);
+    debugPrint("Rain: ${data.place}");
+    notifyRain(message.data);
+  } else {
+    debugPrint("Unknown disaster type: ${disaster.type}");
+    return;
+  }
 }
 
 void debugMessageHandler(RemoteMessage message) {
@@ -131,22 +133,152 @@ void debugMessageHandler(RemoteMessage message) {
   }
 }
 
+void notifyEarthquake(
+  dynamic data,
+) {
+  final notificationPlugin = FlutterLocalNotificationsPlugin();
+
+  final earthquake = EarthquakeData.fromMap(data);
+  final location = Location();
+
+  debugPrint("get location");
+  location.getLocation().then((value) async {
+    debugPrint("get location: $value");
+
+    if (value.latitude == null || value.longitude == null) {
+      notificationPlugin.show(
+        0,
+        "位置情報の権限",
+        "位置情報の権限が許可されていません。",
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            androidChannel.id,
+            androidChannel.name,
+            importance: Importance.max,
+          ),
+        ),
+      );
+      return;
+    }
+
+    await database.into(database.notifyRaw).insert(
+          NotifyRawCompanion.insert(
+            disaster: "地震",
+            description: "発生地点: ${earthquake.place}\n"
+                "マグニチュード: ${earthquake.magnitude}\n"
+                "震源の深さ: ${earthquake.depth}\n"
+                "最大震度: ${earthquake.maxScale}",
+            longitute: earthquake.longitude,
+            latitude: earthquake.latitude,
+            radius: earthquake.radius,
+            time: earthquake.time,
+          ),
+        );
+
+    if (isInArea(
+      value.latitude!,
+      value.longitude!,
+      earthquake.latitude,
+      earthquake.longitude,
+      earthquake.radius,
+    )) {
+      notificationPlugin.show(
+        0,
+        "災害発生の通知",
+        "地震が発生しました: ${earthquake.place}\n"
+            " マグニチュード: ${earthquake.magnitude}"
+            " 震源の深さ: ${earthquake.depth}"
+            " 最大震度: ${earthquake.maxScale}"
+            " 発生時刻: ${earthquake.time}",
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            androidChannel.id,
+            androidChannel.name,
+            importance: Importance.max,
+          ),
+        ),
+      );
+    }
+  }).onError((error, stackTrace) {
+    debugPrint("Location Error: $error");
+  });
+}
+
+void notifyRain(
+  dynamic data,
+) {
+  final notificationPlugin = FlutterLocalNotificationsPlugin();
+
+  final rain = RainData.fromMap(data);
+  final location = Location();
+
+  location.getLocation().then((value) async {
+    if (value.latitude == null || value.longitude == null) {
+      notificationPlugin.show(
+        0,
+        "位置情報の権限",
+        "位置情報の権限が許可されていません。",
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            androidChannel.id,
+            androidChannel.name,
+            importance: Importance.max,
+          ),
+        ),
+      );
+      return;
+    }
+
+    await database.into(database.notifyRaw).insert(
+          NotifyRawCompanion.insert(
+            disaster: "大雨",
+            description: "発生地点: ${rain.place}",
+            longitute: rain.longitude,
+            latitude: rain.latitude,
+            radius: rain.radius,
+            time: rain.time,
+          ),
+        );
+
+    if (isInArea(
+      value.latitude!,
+      value.longitude!,
+      rain.latitude,
+      rain.longitude,
+      rain.radius,
+    )) {
+      notificationPlugin.show(
+        0,
+        "災害発生の通知",
+        "大雨に伴う災害に警戒して下さい: ${rain.place}\n"
+            "発表時刻: ${rain.time}",
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            androidChannel.id,
+            androidChannel.name,
+            importance: Importance.max,
+          ),
+        ),
+      );
+    }
+  }).onError((error, stackTrace) {
+    debugPrint("Location Error: $error");
+  });
+}
+
 class DisasterMessageData {
   final String id;
   final String type;
-  final dynamic data;
 
   DisasterMessageData({
     required this.id,
     required this.type,
-    required this.data,
   });
 
   factory DisasterMessageData.fromMap(Map<String, dynamic> map) {
     return DisasterMessageData(
       id: map["id"],
       type: map["type"],
-      data: map["data"],
     );
   }
 }

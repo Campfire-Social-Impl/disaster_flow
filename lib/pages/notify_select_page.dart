@@ -1,4 +1,7 @@
+import 'package:disaster_flow/models/flow_item.dart';
+import 'package:disaster_flow/models/flows.dart';
 import 'package:disaster_flow/models/notify.dart';
+import 'package:disaster_flow/pages/flow_launch_page.dart';
 import 'package:disaster_flow/utils/time.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +17,7 @@ class NotifySelectPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notifies = ref.watch(notifiesProvider).value;
+    final flows = ref.watch(actionFlowListProvider).value;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -29,12 +33,16 @@ class NotifySelectPage extends HookConsumerWidget {
         backgroundColor: const Color.fromARGB(255, 255, 220, 81),
         shadowColor: Colors.black.withOpacity(0.2),
       ),
-      body: notifies != null
+      body: notifies != null && flows != null
           ? (notifies.isNotEmpty
               ? ListView.builder(
                   itemCount: ref.watch(notifiesProvider).value!.length,
                   itemBuilder: (context, index) {
                     final notify = notifies[index];
+                    final flow = flows
+                        .where((elem) => elem.disaster == notify.disaster)
+                        .firstOrNull;
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 2.0),
@@ -63,7 +71,22 @@ class NotifySelectPage extends HookConsumerWidget {
                             ),
                           ),
                           trailing: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: flow != null
+                                ? () {
+                                    ref
+                                        .read(launchFlowIdProvider.notifier)
+                                        .update((value) => flow.id);
+                                    ref
+                                        .read(flowItemListProvider.notifier)
+                                        .get(flow.id);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const FlowLaunchPage(),
+                                      ),
+                                    );
+                                  }
+                                : null,
                             style: ButtonStyle(
                               foregroundColor: WidgetStateProperty.all(
                                 Colors.black,
@@ -72,7 +95,7 @@ class NotifySelectPage extends HookConsumerWidget {
                                 const Color.fromARGB(255, 255, 220, 81),
                               ),
                             ),
-                            child: const Text('フロー実行'),
+                            child: const Text('避難'),
                           ),
                         ),
                       ),

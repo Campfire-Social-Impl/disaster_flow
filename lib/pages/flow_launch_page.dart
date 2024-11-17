@@ -77,7 +77,7 @@ class FlowLaunchPage extends HookConsumerWidget {
                     itemCount: flowItems.length,
                     itemBuilder: (context, index) {
                       final flowItem = flowItems[index];
-                      final check = useState(false);
+                      // final check = useState(false);
 
                       return Padding(
                         key: Key(flowItem.id.toString()),
@@ -108,12 +108,12 @@ class FlowLaunchPage extends HookConsumerWidget {
                                       ),
                                     ),
                                   ),
-                                  Checkbox(
-                                    value: check.value,
-                                    onChanged: (value) {
-                                      check.value = value!;
-                                    },
-                                  ),
+                                  // Checkbox(
+                                  //   value: check.value,
+                                  //   onChanged: (value) {
+                                  //     check.value = value!;
+                                  //   },
+                                  // ),
                                 ],
                               ),
                               Padding(

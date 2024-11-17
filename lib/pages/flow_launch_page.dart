@@ -1,7 +1,6 @@
 import 'package:disaster_flow/models/flow_item.dart';
 import 'package:disaster_flow/models/flows.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final launchFlowIdProvider = StateProvider<int>((ref) => 0);
@@ -23,6 +22,16 @@ final launchFlowItemsProvider = FutureProvider<List<FlowItem>>((ref) async {
   items.sort((a, b) => a.index.compareTo(b.index));
   return items;
 });
+final checksProvider = StateProvider<List<bool>>((ref) {
+  final flow = ref.watch(launchFlowProvider).value;
+  final flowItems = ref.watch(launchFlowItemsProvider).value;
+
+  if (flow != null && flowItems != null) {
+    return List.generate(flowItems.length, (index) => false);
+  } else {
+    return [];
+  }
+});
 
 class FlowLaunchPage extends HookConsumerWidget {
   const FlowLaunchPage({super.key});
@@ -31,6 +40,7 @@ class FlowLaunchPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final flow = ref.watch(launchFlowProvider).value;
     final flowItems = ref.watch(launchFlowItemsProvider).value;
+    final checks = ref.watch(checksProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +57,7 @@ class FlowLaunchPage extends HookConsumerWidget {
         backgroundColor: const Color.fromARGB(255, 200, 120, 80),
         shadowColor: Colors.black.withOpacity(0.2),
       ),
-      body: flow != null
+      body: flow != null && checks.isNotEmpty
           ? Column(
               children: [
                 Padding(
@@ -77,7 +87,7 @@ class FlowLaunchPage extends HookConsumerWidget {
                     itemCount: flowItems.length,
                     itemBuilder: (context, index) {
                       final flowItem = flowItems[index];
-                      // final check = useState(false);
+                      final check = checks[index];
 
                       return Padding(
                         key: Key(flowItem.id.toString()),
@@ -108,12 +118,35 @@ class FlowLaunchPage extends HookConsumerWidget {
                                       ),
                                     ),
                                   ),
-                                  // Checkbox(
-                                  //   value: check.value,
-                                  //   onChanged: (value) {
-                                  //     check.value = value!;
-                                  //   },
-                                  // ),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Checkbox(
+                                            value: check,
+                                            onChanged: (value) {
+                                              ref
+                                                  .read(checksProvider.notifier)
+                                                  .update((state) {
+                                                return state
+                                                    .asMap()
+                                                    .entries
+                                                    .map((entry) {
+                                                  if (entry.key == index) {
+                                                    return value!;
+                                                  } else {
+                                                    return entry.value;
+                                                  }
+                                                }).toList();
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                               Padding(

@@ -24,3 +24,11 @@ double distanceBetween(
   final double d = 2 * r * asin(sqrt(a + b));
   return d;
 }
+
+bool isInArea(
+  LocationData point1,
+  LocationData point2,
+  double radius,
+) {
+  return distanceBetween(point1, point2) <= radius;
+}

@@ -55,7 +55,7 @@ final suggestListProvider = Provider.family<List<Suggest>, String>((ref, type) {
 ・（その他）''',
       ),
     ];
-  } else if (type == "洪水") {
+  } else if (type == "大雨") {
     return [
       Suggest(
         label: "避難の基準",

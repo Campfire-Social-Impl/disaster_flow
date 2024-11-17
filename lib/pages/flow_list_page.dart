@@ -62,20 +62,20 @@ class FlowListPage extends HookConsumerWidget {
                             },
                             itemBuilder: (context) {
                               return const [
-                                PopupMenuItem(
-                                  value: "edit",
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.edit),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 16.0,
-                                        ),
-                                        child: Text("編集"),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                // PopupMenuItem(
+                                //   value: "edit",
+                                //   child: Row(
+                                //     children: [
+                                //       Icon(Icons.edit),
+                                //       Padding(
+                                //         padding: EdgeInsets.symmetric(
+                                //           horizontal: 16.0,
+                                //         ),
+                                //         child: Text("編集"),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
                                 PopupMenuItem(
                                   value: "delete",
                                   child: Row(

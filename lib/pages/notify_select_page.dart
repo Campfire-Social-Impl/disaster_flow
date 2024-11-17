@@ -62,6 +62,18 @@ class NotifySelectPage extends HookConsumerWidget {
                               ],
                             ),
                           ),
+                          trailing: ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(
+                              foregroundColor: WidgetStateProperty.all(
+                                Colors.black,
+                              ),
+                              backgroundColor: WidgetStateProperty.all(
+                                const Color.fromARGB(255, 255, 220, 81),
+                              ),
+                            ),
+                            child: const Text('フロー実行'),
+                          ),
                         ),
                       ),
                     );

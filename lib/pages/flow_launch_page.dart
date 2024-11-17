@@ -1,6 +1,7 @@
 import 'package:disaster_flow/models/flow_item.dart';
 import 'package:disaster_flow/models/flows.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final launchFlowIdProvider = StateProvider<int>((ref) => 0);
@@ -22,13 +23,6 @@ final launchFlowItemsProvider = FutureProvider<List<FlowItem>>((ref) async {
   items.sort((a, b) => a.index.compareTo(b.index));
   return items;
 });
-final launchCheckProvider = StateProvider<List<bool>?>((ref) {
-  final items = ref.watch(launchFlowItemsProvider).value;
-  if (items == null) {
-    return null;
-  }
-  return List.generate(items.length, (index) => false);
-});
 
 class FlowLaunchPage extends HookConsumerWidget {
   const FlowLaunchPage({super.key});
@@ -37,7 +31,6 @@ class FlowLaunchPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final flow = ref.watch(launchFlowProvider).value;
     final flowItems = ref.watch(launchFlowItemsProvider).value;
-    final checks = ref.watch(launchCheckProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -54,7 +47,7 @@ class FlowLaunchPage extends HookConsumerWidget {
         backgroundColor: const Color.fromARGB(255, 200, 120, 80),
         shadowColor: Colors.black.withOpacity(0.2),
       ),
-      body: flow != null && checks != null
+      body: flow != null
           ? Column(
               children: [
                 Padding(
@@ -84,7 +77,8 @@ class FlowLaunchPage extends HookConsumerWidget {
                     itemCount: flowItems.length,
                     itemBuilder: (context, index) {
                       final flowItem = flowItems[index];
-                      final check = checks[index];
+                      final check = useState(false);
+
                       return Padding(
                         key: Key(flowItem.id.toString()),
                         padding: const EdgeInsets.symmetric(
@@ -115,16 +109,9 @@ class FlowLaunchPage extends HookConsumerWidget {
                                     ),
                                   ),
                                   Checkbox(
-                                    value: check,
+                                    value: check.value,
                                     onChanged: (value) {
-                                      ref
-                                          .read(launchCheckProvider.notifier)
-                                          .update(
-                                        (checks) {
-                                          checks![index] = value!;
-                                          return checks;
-                                        },
-                                      );
+                                      check.value = value!;
                                     },
                                   ),
                                 ],

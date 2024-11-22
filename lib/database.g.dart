@@ -511,16 +511,431 @@ class ActionRawCompanion extends UpdateCompanion<ActionRawData> {
   }
 }
 
+class $NotifyRawTable extends NotifyRaw
+    with TableInfo<$NotifyRawTable, NotifyRawData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NotifyRawTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _disasterMeta =
+      const VerificationMeta('disaster');
+  @override
+  late final GeneratedColumn<String> disaster = GeneratedColumn<String>(
+      'disaster', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _longituteMeta =
+      const VerificationMeta('longitute');
+  @override
+  late final GeneratedColumn<double> longitute = GeneratedColumn<double>(
+      'longitute', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+      'latitude', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _radiusMeta = const VerificationMeta('radius');
+  @override
+  late final GeneratedColumn<double> radius = GeneratedColumn<double>(
+      'radius', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _timeMeta = const VerificationMeta('time');
+  @override
+  late final GeneratedColumn<DateTime> time = GeneratedColumn<DateTime>(
+      'time', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _addressedMeta =
+      const VerificationMeta('addressed');
+  @override
+  late final GeneratedColumn<bool> addressed = GeneratedColumn<bool>(
+      'addressed', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("addressed" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, disaster, description, longitute, latitude, radius, time, addressed];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'notify_raw';
+  @override
+  VerificationContext validateIntegrity(Insertable<NotifyRawData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('disaster')) {
+      context.handle(_disasterMeta,
+          disaster.isAcceptableOrUnknown(data['disaster']!, _disasterMeta));
+    } else if (isInserting) {
+      context.missing(_disasterMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('longitute')) {
+      context.handle(_longituteMeta,
+          longitute.isAcceptableOrUnknown(data['longitute']!, _longituteMeta));
+    } else if (isInserting) {
+      context.missing(_longituteMeta);
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    } else if (isInserting) {
+      context.missing(_latitudeMeta);
+    }
+    if (data.containsKey('radius')) {
+      context.handle(_radiusMeta,
+          radius.isAcceptableOrUnknown(data['radius']!, _radiusMeta));
+    } else if (isInserting) {
+      context.missing(_radiusMeta);
+    }
+    if (data.containsKey('time')) {
+      context.handle(
+          _timeMeta, time.isAcceptableOrUnknown(data['time']!, _timeMeta));
+    } else if (isInserting) {
+      context.missing(_timeMeta);
+    }
+    if (data.containsKey('addressed')) {
+      context.handle(_addressedMeta,
+          addressed.isAcceptableOrUnknown(data['addressed']!, _addressedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  NotifyRawData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NotifyRawData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      disaster: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}disaster'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      longitute: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}longitute'])!,
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}latitude'])!,
+      radius: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}radius'])!,
+      time: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}time'])!,
+      addressed: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}addressed'])!,
+    );
+  }
+
+  @override
+  $NotifyRawTable createAlias(String alias) {
+    return $NotifyRawTable(attachedDatabase, alias);
+  }
+}
+
+class NotifyRawData extends DataClass implements Insertable<NotifyRawData> {
+  final int id;
+  final String disaster;
+  final String description;
+  final double longitute;
+  final double latitude;
+  final double radius;
+  final DateTime time;
+  final bool addressed;
+  const NotifyRawData(
+      {required this.id,
+      required this.disaster,
+      required this.description,
+      required this.longitute,
+      required this.latitude,
+      required this.radius,
+      required this.time,
+      required this.addressed});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['disaster'] = Variable<String>(disaster);
+    map['description'] = Variable<String>(description);
+    map['longitute'] = Variable<double>(longitute);
+    map['latitude'] = Variable<double>(latitude);
+    map['radius'] = Variable<double>(radius);
+    map['time'] = Variable<DateTime>(time);
+    map['addressed'] = Variable<bool>(addressed);
+    return map;
+  }
+
+  NotifyRawCompanion toCompanion(bool nullToAbsent) {
+    return NotifyRawCompanion(
+      id: Value(id),
+      disaster: Value(disaster),
+      description: Value(description),
+      longitute: Value(longitute),
+      latitude: Value(latitude),
+      radius: Value(radius),
+      time: Value(time),
+      addressed: Value(addressed),
+    );
+  }
+
+  factory NotifyRawData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NotifyRawData(
+      id: serializer.fromJson<int>(json['id']),
+      disaster: serializer.fromJson<String>(json['disaster']),
+      description: serializer.fromJson<String>(json['description']),
+      longitute: serializer.fromJson<double>(json['longitute']),
+      latitude: serializer.fromJson<double>(json['latitude']),
+      radius: serializer.fromJson<double>(json['radius']),
+      time: serializer.fromJson<DateTime>(json['time']),
+      addressed: serializer.fromJson<bool>(json['addressed']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'disaster': serializer.toJson<String>(disaster),
+      'description': serializer.toJson<String>(description),
+      'longitute': serializer.toJson<double>(longitute),
+      'latitude': serializer.toJson<double>(latitude),
+      'radius': serializer.toJson<double>(radius),
+      'time': serializer.toJson<DateTime>(time),
+      'addressed': serializer.toJson<bool>(addressed),
+    };
+  }
+
+  NotifyRawData copyWith(
+          {int? id,
+          String? disaster,
+          String? description,
+          double? longitute,
+          double? latitude,
+          double? radius,
+          DateTime? time,
+          bool? addressed}) =>
+      NotifyRawData(
+        id: id ?? this.id,
+        disaster: disaster ?? this.disaster,
+        description: description ?? this.description,
+        longitute: longitute ?? this.longitute,
+        latitude: latitude ?? this.latitude,
+        radius: radius ?? this.radius,
+        time: time ?? this.time,
+        addressed: addressed ?? this.addressed,
+      );
+  NotifyRawData copyWithCompanion(NotifyRawCompanion data) {
+    return NotifyRawData(
+      id: data.id.present ? data.id.value : this.id,
+      disaster: data.disaster.present ? data.disaster.value : this.disaster,
+      description:
+          data.description.present ? data.description.value : this.description,
+      longitute: data.longitute.present ? data.longitute.value : this.longitute,
+      latitude: data.latitude.present ? data.latitude.value : this.latitude,
+      radius: data.radius.present ? data.radius.value : this.radius,
+      time: data.time.present ? data.time.value : this.time,
+      addressed: data.addressed.present ? data.addressed.value : this.addressed,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotifyRawData(')
+          ..write('id: $id, ')
+          ..write('disaster: $disaster, ')
+          ..write('description: $description, ')
+          ..write('longitute: $longitute, ')
+          ..write('latitude: $latitude, ')
+          ..write('radius: $radius, ')
+          ..write('time: $time, ')
+          ..write('addressed: $addressed')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, disaster, description, longitute, latitude, radius, time, addressed);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NotifyRawData &&
+          other.id == this.id &&
+          other.disaster == this.disaster &&
+          other.description == this.description &&
+          other.longitute == this.longitute &&
+          other.latitude == this.latitude &&
+          other.radius == this.radius &&
+          other.time == this.time &&
+          other.addressed == this.addressed);
+}
+
+class NotifyRawCompanion extends UpdateCompanion<NotifyRawData> {
+  final Value<int> id;
+  final Value<String> disaster;
+  final Value<String> description;
+  final Value<double> longitute;
+  final Value<double> latitude;
+  final Value<double> radius;
+  final Value<DateTime> time;
+  final Value<bool> addressed;
+  const NotifyRawCompanion({
+    this.id = const Value.absent(),
+    this.disaster = const Value.absent(),
+    this.description = const Value.absent(),
+    this.longitute = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.radius = const Value.absent(),
+    this.time = const Value.absent(),
+    this.addressed = const Value.absent(),
+  });
+  NotifyRawCompanion.insert({
+    this.id = const Value.absent(),
+    required String disaster,
+    required String description,
+    required double longitute,
+    required double latitude,
+    required double radius,
+    required DateTime time,
+    this.addressed = const Value.absent(),
+  })  : disaster = Value(disaster),
+        description = Value(description),
+        longitute = Value(longitute),
+        latitude = Value(latitude),
+        radius = Value(radius),
+        time = Value(time);
+  static Insertable<NotifyRawData> custom({
+    Expression<int>? id,
+    Expression<String>? disaster,
+    Expression<String>? description,
+    Expression<double>? longitute,
+    Expression<double>? latitude,
+    Expression<double>? radius,
+    Expression<DateTime>? time,
+    Expression<bool>? addressed,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (disaster != null) 'disaster': disaster,
+      if (description != null) 'description': description,
+      if (longitute != null) 'longitute': longitute,
+      if (latitude != null) 'latitude': latitude,
+      if (radius != null) 'radius': radius,
+      if (time != null) 'time': time,
+      if (addressed != null) 'addressed': addressed,
+    });
+  }
+
+  NotifyRawCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? disaster,
+      Value<String>? description,
+      Value<double>? longitute,
+      Value<double>? latitude,
+      Value<double>? radius,
+      Value<DateTime>? time,
+      Value<bool>? addressed}) {
+    return NotifyRawCompanion(
+      id: id ?? this.id,
+      disaster: disaster ?? this.disaster,
+      description: description ?? this.description,
+      longitute: longitute ?? this.longitute,
+      latitude: latitude ?? this.latitude,
+      radius: radius ?? this.radius,
+      time: time ?? this.time,
+      addressed: addressed ?? this.addressed,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (disaster.present) {
+      map['disaster'] = Variable<String>(disaster.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (longitute.present) {
+      map['longitute'] = Variable<double>(longitute.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (radius.present) {
+      map['radius'] = Variable<double>(radius.value);
+    }
+    if (time.present) {
+      map['time'] = Variable<DateTime>(time.value);
+    }
+    if (addressed.present) {
+      map['addressed'] = Variable<bool>(addressed.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotifyRawCompanion(')
+          ..write('id: $id, ')
+          ..write('disaster: $disaster, ')
+          ..write('description: $description, ')
+          ..write('longitute: $longitute, ')
+          ..write('latitude: $latitude, ')
+          ..write('radius: $radius, ')
+          ..write('time: $time, ')
+          ..write('addressed: $addressed')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$LocalDatabase extends GeneratedDatabase {
   _$LocalDatabase(QueryExecutor e) : super(e);
   $LocalDatabaseManager get managers => $LocalDatabaseManager(this);
   late final $FlowRawTable flowRaw = $FlowRawTable(this);
   late final $ActionRawTable actionRaw = $ActionRawTable(this);
+  late final $NotifyRawTable notifyRaw = $NotifyRawTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [flowRaw, actionRaw];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [flowRaw, actionRaw, notifyRaw];
 }
 
 typedef $$FlowRawTableCreateCompanionBuilder = FlowRawCompanion Function({
@@ -890,6 +1305,198 @@ typedef $$ActionRawTableProcessedTableManager = ProcessedTableManager<
     (ActionRawData, $$ActionRawTableReferences),
     ActionRawData,
     PrefetchHooks Function({bool flowId})>;
+typedef $$NotifyRawTableCreateCompanionBuilder = NotifyRawCompanion Function({
+  Value<int> id,
+  required String disaster,
+  required String description,
+  required double longitute,
+  required double latitude,
+  required double radius,
+  required DateTime time,
+  Value<bool> addressed,
+});
+typedef $$NotifyRawTableUpdateCompanionBuilder = NotifyRawCompanion Function({
+  Value<int> id,
+  Value<String> disaster,
+  Value<String> description,
+  Value<double> longitute,
+  Value<double> latitude,
+  Value<double> radius,
+  Value<DateTime> time,
+  Value<bool> addressed,
+});
+
+class $$NotifyRawTableFilterComposer
+    extends FilterComposer<_$LocalDatabase, $NotifyRawTable> {
+  $$NotifyRawTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get disaster => $state.composableBuilder(
+      column: $state.table.disaster,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get longitute => $state.composableBuilder(
+      column: $state.table.longitute,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get radius => $state.composableBuilder(
+      column: $state.table.radius,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<DateTime> get time => $state.composableBuilder(
+      column: $state.table.time,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get addressed => $state.composableBuilder(
+      column: $state.table.addressed,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$NotifyRawTableOrderingComposer
+    extends OrderingComposer<_$LocalDatabase, $NotifyRawTable> {
+  $$NotifyRawTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get disaster => $state.composableBuilder(
+      column: $state.table.disaster,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get description => $state.composableBuilder(
+      column: $state.table.description,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get longitute => $state.composableBuilder(
+      column: $state.table.longitute,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get radius => $state.composableBuilder(
+      column: $state.table.radius,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get time => $state.composableBuilder(
+      column: $state.table.time,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get addressed => $state.composableBuilder(
+      column: $state.table.addressed,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+class $$NotifyRawTableTableManager extends RootTableManager<
+    _$LocalDatabase,
+    $NotifyRawTable,
+    NotifyRawData,
+    $$NotifyRawTableFilterComposer,
+    $$NotifyRawTableOrderingComposer,
+    $$NotifyRawTableCreateCompanionBuilder,
+    $$NotifyRawTableUpdateCompanionBuilder,
+    (
+      NotifyRawData,
+      BaseReferences<_$LocalDatabase, $NotifyRawTable, NotifyRawData>
+    ),
+    NotifyRawData,
+    PrefetchHooks Function()> {
+  $$NotifyRawTableTableManager(_$LocalDatabase db, $NotifyRawTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$NotifyRawTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$NotifyRawTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> disaster = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<double> longitute = const Value.absent(),
+            Value<double> latitude = const Value.absent(),
+            Value<double> radius = const Value.absent(),
+            Value<DateTime> time = const Value.absent(),
+            Value<bool> addressed = const Value.absent(),
+          }) =>
+              NotifyRawCompanion(
+            id: id,
+            disaster: disaster,
+            description: description,
+            longitute: longitute,
+            latitude: latitude,
+            radius: radius,
+            time: time,
+            addressed: addressed,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String disaster,
+            required String description,
+            required double longitute,
+            required double latitude,
+            required double radius,
+            required DateTime time,
+            Value<bool> addressed = const Value.absent(),
+          }) =>
+              NotifyRawCompanion.insert(
+            id: id,
+            disaster: disaster,
+            description: description,
+            longitute: longitute,
+            latitude: latitude,
+            radius: radius,
+            time: time,
+            addressed: addressed,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$NotifyRawTableProcessedTableManager = ProcessedTableManager<
+    _$LocalDatabase,
+    $NotifyRawTable,
+    NotifyRawData,
+    $$NotifyRawTableFilterComposer,
+    $$NotifyRawTableOrderingComposer,
+    $$NotifyRawTableCreateCompanionBuilder,
+    $$NotifyRawTableUpdateCompanionBuilder,
+    (
+      NotifyRawData,
+      BaseReferences<_$LocalDatabase, $NotifyRawTable, NotifyRawData>
+    ),
+    NotifyRawData,
+    PrefetchHooks Function()>;
 
 class $LocalDatabaseManager {
   final _$LocalDatabase _db;
@@ -898,4 +1505,6 @@ class $LocalDatabaseManager {
       $$FlowRawTableTableManager(_db, _db.flowRaw);
   $$ActionRawTableTableManager get actionRaw =>
       $$ActionRawTableTableManager(_db, _db.actionRaw);
+  $$NotifyRawTableTableManager get notifyRaw =>
+      $$NotifyRawTableTableManager(_db, _db.notifyRaw);
 }

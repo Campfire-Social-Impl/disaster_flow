@@ -1,24 +1,48 @@
+import 'package:disaster_flow/models/flow_item.dart';
+import 'package:disaster_flow/models/flows.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class FlowLaunchPage extends StatefulWidget {
+final launchFlowIdProvider = StateProvider<int>((ref) => 0);
+final launchFlowProvider = FutureProvider<ActionFlow?>((ref) async {
+  final flowId = ref.watch(launchFlowIdProvider);
+  final flows = await ref.watch(actionFlowListProvider.future);
+  final filterdFlows = flows.where((item) => item.id == flowId).toList();
+  if (filterdFlows.isNotEmpty) {
+    return filterdFlows[0];
+  } else {
+    return null;
+  }
+});
+final launchFlowItemsProvider = FutureProvider<List<FlowItem>>((ref) async {
+  final flowId = ref.watch(launchFlowIdProvider);
+  final items = (await ref.watch(flowItemListProvider.future))
+      .where((item) => item.flowId == flowId)
+      .toList();
+  items.sort((a, b) => a.index.compareTo(b.index));
+  return items;
+});
+final checksProvider = StateProvider<List<bool>>((ref) {
+  final flow = ref.watch(launchFlowProvider).value;
+  final flowItems = ref.watch(launchFlowItemsProvider).value;
+
+  if (flow != null && flowItems != null) {
+    return List.generate(flowItems.length, (index) => false);
+  } else {
+    return [];
+  }
+});
+
+class FlowLaunchPage extends HookConsumerWidget {
   const FlowLaunchPage({super.key});
 
   @override
-  _FlowLaunchPageState createState() => _FlowLaunchPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final flow = ref.watch(launchFlowProvider).value;
+    final flowItems = ref.watch(launchFlowItemsProvider).value;
+    final checks = ref.watch(checksProvider);
 
-class _FlowLaunchPageState extends State<FlowLaunchPage> {
-  // 各フォームセクションのチェックボックスの状態を管理
-  bool _isChecked1 = false;
-  bool _isChecked2 = false;
-  bool _isChecked3 = false;
-  bool _isChecked4 = false;
-  bool _isChecked5 = false;
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -26,187 +50,125 @@ class _FlowLaunchPageState extends State<FlowLaunchPage> {
           },
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text('避難'),
+        title: const Text('フロー実行中'),
         centerTitle: true,
         toolbarHeight: 80,
         foregroundColor: Colors.black,
-        backgroundColor: const Color.fromARGB(255, 255, 220, 81),
+        backgroundColor: const Color.fromARGB(255, 200, 120, 80),
         shadowColor: Colors.black.withOpacity(0.2),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10.0,
-                      spreadRadius: 2.0,
+      body: flow != null && checks.isNotEmpty
+          ? Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 2.0),
+                  child: Card(
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("タイトル : ${flow.title}"),
+                              Text("テーマ : ${flow.disaster}"),
+                              Text("アクション数 : ${flowItems!.length} 件"),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text("タイトル :地震発生時の行動フロー"),
-                          Text("テーマ :地震"),
-                          Text("アクション数 :5件"),
-                        ],
-                      ),
-                    ),
-                  ],
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: flowItems.length,
+                    itemBuilder: (context, index) {
+                      final flowItem = flowItems[index];
+                      final check = checks[index];
+
+                      return Padding(
+                        key: Key(flowItem.id.toString()),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 2.0,
+                        ),
+                        child: Card(
+                          color: Colors.white,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Icon(
+                                      Icons.check_circle_outline,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      flowItem.title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.brown,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Checkbox(
+                                            value: check,
+                                            onChanged: (value) {
+                                              ref
+                                                  .read(checksProvider.notifier)
+                                                  .update((state) {
+                                                return state
+                                                    .asMap()
+                                                    .entries
+                                                    .map((entry) {
+                                                  if (entry.key == index) {
+                                                    return value!;
+                                                  } else {
+                                                    return entry.value;
+                                                  }
+                                                }).toList();
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(flowItem.action),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 10), // 追加の余白
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
-              child: Row(
-                children: const [
-                  Text(
-                    "＊確認した項目にチェックをつけましょう",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.brown,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                children: [
-                  _buildFormSection(
-                    label: '避難の基準',
-                    hintText: '・水位が〇〇cmになったら非難します',
-                    isChecked: _isChecked1,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked1 = value!;
-                      });
-                    },
-                  ),
-                  _buildFormSection(
-                    label: '避難先',
-                    hintText: '・〇〇公園',
-                    isChecked: _isChecked2,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked2 = value!;
-                      });
-                    },
-                  ),
-                  _buildFormSection(
-                    label: '連絡先',
-                    hintText: '・電話番号、メールアドレス、sns、災害用伝言ダイヤル（171）',
-                    isChecked: _isChecked3,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked3 = value!;
-                      });
-                    },
-                  ),
-                  _buildFormSection(
-                    label: '情報源',
-                    hintText: '・ラジオ',
-                    isChecked: _isChecked4,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked4 = value!;
-                      });
-                    },
-                  ),
-                  _buildFormSection(
-                    label: '所持品',
-                    hintText: '・食料、飲料、貴重品など',
-                    isChecked: _isChecked5,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked5 = value!;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+              ],
+            )
+          : loadingPanel(context),
     );
   }
 
-  // フォームセクションを生成する関数
-  Widget _buildFormSection({
-    required String label,
-    required String hintText,
-    required bool isChecked,
-    required ValueChanged<bool?> onChanged,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10.0,
-            spreadRadius: 2.0,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.check_circle_outline, color: Colors.brown),
-                  const SizedBox(width: 20), // アイコンとテキストの間の余白
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.brown,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              Checkbox(
-                value: isChecked,
-                onChanged: onChanged,
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Text(
-            hintText,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color.fromARGB(255, 33, 33, 33),
-            ),
-          ),
-        ],
-      ),
+  Widget loadingPanel(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 }

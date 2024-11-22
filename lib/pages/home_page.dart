@@ -1,5 +1,6 @@
 import 'package:disaster_flow/models/flows.dart';
 import 'package:disaster_flow/pages/flow_list_page.dart';
+import 'package:disaster_flow/pages/notify_select_page.dart';
 import 'package:disaster_flow/pages/theme_choice_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,7 +27,11 @@ class HomePage extends HookConsumerWidget {
             icon: Icons.directions_run,
             title: '避難',
             onTap: () {
-              debugPrint('避難');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const NotifySelectPage(),
+                ),
+              );
             },
           ),
           _buildTile(

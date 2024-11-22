@@ -46,10 +46,10 @@ class ThemeChoicePage extends HookConsumerWidget {
           _buildCard(
             context,
             path: "assets/images/flood.png",
-            title: "洪水",
+            title: "大雨",
             onTap: () {
               ref.read(suggestThemeProvider.notifier).update((value) => "");
-              ref.read(suggestThemeProvider.notifier).update((value) => "洪水");
+              ref.read(suggestThemeProvider.notifier).update((value) => "大雨");
               ref.read(suggestIndexProvider.notifier).state = 0;
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(

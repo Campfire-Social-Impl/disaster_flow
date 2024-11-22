@@ -1,6 +1,7 @@
 import 'package:disaster_flow/firebase_options.dart';
 import 'package:disaster_flow/notification.dart';
 import 'package:disaster_flow/pages/home_page.dart';
+import 'package:disaster_flow/permissions.dart';
 import 'package:disaster_flow/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await firebaseMessagingConfigure();
+  await getLocationPermission();
 
   runApp(const ProviderScope(child: MyApp()));
 }

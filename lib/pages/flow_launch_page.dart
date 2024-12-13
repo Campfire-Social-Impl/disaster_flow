@@ -1,7 +1,10 @@
 import 'package:disaster_flow/models/flow_item.dart';
 import 'package:disaster_flow/models/flows.dart';
+import 'package:disaster_flow/models/notify.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+final selectedNotifyProvider = StateProvider<Notify?>((ref) => null);
 
 final launchFlowIdProvider = StateProvider<int>((ref) => 0);
 final launchFlowProvider = FutureProvider<ActionFlow?>((ref) async {
@@ -31,6 +34,15 @@ final checksProvider = StateProvider<List<bool>>((ref) {
   } else {
     return [];
   }
+});
+final allCheckedProvider = Provider<bool>((ref) {
+  final checks = ref.watch(checksProvider);
+  for (final check in checks) {
+    if (!check) {
+      return false;
+    }
+  }
+  return true;
 });
 
 class FlowLaunchPage extends HookConsumerWidget {
@@ -66,6 +78,7 @@ class FlowLaunchPage extends HookConsumerWidget {
                   child: Card(
                     color: Colors.white,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -76,6 +89,36 @@ class FlowLaunchPage extends HookConsumerWidget {
                               Text("テーマ : ${flow.disaster}"),
                               Text("アクション数 : ${flowItems!.length} 件"),
                             ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all(
+                                ref.watch(allCheckedProvider)
+                                    ? const Color.fromARGB(255, 200, 120, 80)
+                                    : Colors.grey,
+                              ),
+                            ),
+                            onPressed: ref.watch(allCheckedProvider)
+                                ? () {
+                                    final notify =
+                                        ref.read(selectedNotifyProvider);
+                                    if (notify != null) {
+                                      ref
+                                          .read(notifyListProvider.notifier)
+                                          .addressed(notify.id);
+                                    }
+                                    Navigator.of(context).pop();
+                                  }
+                                : null,
+                            child: const Text(
+                              "完了",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
                       ],

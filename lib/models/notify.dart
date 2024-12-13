@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Notify {
+  final int id;
   final String disaster;
   final String description;
   final double longitute;
@@ -12,6 +13,7 @@ class Notify {
   final bool addressed;
 
   Notify({
+    required this.id,
     required this.disaster,
     required this.description,
     required this.longitute,
@@ -34,6 +36,7 @@ class NotifyListNotifier extends AsyncNotifier<List<Notify>> {
     final notifies = await database.select(database.notifyRaw).get();
     return notifies
         .map((e) => Notify(
+              id: e.id,
               disaster: e.disaster,
               description: e.description,
               longitute: e.longitute,

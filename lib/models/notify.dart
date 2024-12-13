@@ -9,6 +9,7 @@ class Notify {
   final double latitude;
   final double radius;
   final DateTime time;
+  final bool addressed;
 
   Notify({
     required this.disaster,
@@ -17,6 +18,7 @@ class Notify {
     required this.latitude,
     required this.radius,
     required this.time,
+    required this.addressed,
   });
 }
 
@@ -38,6 +40,7 @@ class NotifyListNotifier extends AsyncNotifier<List<Notify>> {
               latitude: e.latitude,
               radius: e.radius,
               time: e.time,
+              addressed: e.addressed,
             ))
         .toList();
   }
@@ -66,6 +69,7 @@ class NotifyListNotifier extends AsyncNotifier<List<Notify>> {
             latitude: latitude,
             radius: radius,
             time: time,
+            addressed: const Value(false),
           ),
         );
     state = await AsyncValue.guard(() async {
@@ -96,6 +100,7 @@ class NotifyListNotifier extends AsyncNotifier<List<Notify>> {
     double latitude,
     double radius,
     DateTime time,
+    bool addressed,
   ) async {
     state = const AsyncValue.loading();
     await (database.update(database.notifyRaw)
@@ -108,6 +113,7 @@ class NotifyListNotifier extends AsyncNotifier<List<Notify>> {
         latitude: Value(latitude),
         radius: Value(radius),
         time: Value(time),
+        addressed: Value(addressed),
       ),
     );
     state = await AsyncValue.guard(() async {

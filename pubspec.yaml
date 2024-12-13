@@ -70,14 +70,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/images/Exit_icon.png
-    - assets/images/set.png
-    - assets/images/check_24.png
-    - assets/images/direction.png
-    - assets/images/return2.png
-    - assets/images/Arrow.png
     - assets/images/earthquake.png
-    - assets/images/flood.png
     - assets/images/heavy_rain.png
 
   # The following line ensures that the Material Icons font is

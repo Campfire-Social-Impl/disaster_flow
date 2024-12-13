@@ -45,7 +45,7 @@ class ThemeChoicePage extends HookConsumerWidget {
           ),
           _buildCard(
             context,
-            path: "assets/images/flood.png",
+            path: "assets/images/heavy_rain.png",
             title: "大雨",
             onTap: () {
               ref.read(suggestThemeProvider.notifier).update((value) => "");

@@ -63,44 +63,44 @@ class HomePage extends HookConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Colors.black,
-        unselectedItemColor: Colors.grey[700],
-        iconSize: 30,
-        backgroundColor: Colors.yellow[50],
-        items: const [
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: Icon(
-                Icons.newspaper,
-                color: Colors.black,
-              ),
-            ),
-            label: 'ニュース',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: Icon(
-                Icons.home,
-                color: Colors.black,
-              ),
-            ),
-            label: 'ホーム',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: Icon(
-                Icons.menu,
-                color: Colors.black,
-              ),
-            ),
-            label: 'その他',
-          ),
-        ],
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   fixedColor: Colors.black,
+      //   unselectedItemColor: Colors.grey[700],
+      //   iconSize: 30,
+      //   backgroundColor: Colors.yellow[50],
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //       icon: Padding(
+      //         padding: EdgeInsets.only(top: 8),
+      //         child: Icon(
+      //           Icons.newspaper,
+      //           color: Colors.black,
+      //         ),
+      //       ),
+      //       label: 'ニュース',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Padding(
+      //         padding: EdgeInsets.only(top: 8),
+      //         child: Icon(
+      //           Icons.home,
+      //           color: Colors.black,
+      //         ),
+      //       ),
+      //       label: 'ホーム',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Padding(
+      //         padding: EdgeInsets.only(top: 8),
+      //         child: Icon(
+      //           Icons.menu,
+      //           color: Colors.black,
+      //         ),
+      //       ),
+      //       label: 'その他',
+      //     ),
+      //   ],
+      // ),
     );
   }
 

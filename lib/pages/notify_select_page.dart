@@ -87,14 +87,23 @@ class NotifySelectPage extends HookConsumerWidget {
                                     );
                                   }
                                 : null,
-                            style: ButtonStyle(
-                              foregroundColor: WidgetStateProperty.all(
-                                Colors.black,
-                              ),
-                              backgroundColor: WidgetStateProperty.all(
-                                const Color.fromARGB(255, 255, 220, 81),
-                              ),
-                            ),
+                            style: flow != null
+                                ? ButtonStyle(
+                                    foregroundColor: WidgetStateProperty.all(
+                                      Colors.black,
+                                    ),
+                                    backgroundColor: WidgetStateProperty.all(
+                                      const Color.fromARGB(255, 255, 220, 81),
+                                    ),
+                                  )
+                                : ButtonStyle(
+                                    foregroundColor: WidgetStateProperty.all(
+                                      Colors.black,
+                                    ),
+                                    backgroundColor: WidgetStateProperty.all(
+                                      Colors.grey,
+                                    ),
+                                  ),
                             child: const Text('避難'),
                           ),
                         ),

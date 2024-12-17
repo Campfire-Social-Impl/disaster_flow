@@ -1,9 +1,15 @@
 import 'package:disaster_flow/models/flows.dart';
+import 'package:disaster_flow/models/notify.dart';
 import 'package:disaster_flow/pages/flow_list_page.dart';
 import 'package:disaster_flow/pages/notify_select_page.dart';
 import 'package:disaster_flow/pages/theme_choice_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+final pendingNotifyProvider = FutureProvider<List<Notify>>((ref) async {
+  final notifies = await ref.watch(notifyListProvider.future);
+  return notifies.where((notify) => notify.addressed == false).toList();
+});
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -26,6 +32,28 @@ class HomePage extends HookConsumerWidget {
             context,
             icon: Icons.directions_run,
             title: '避難',
+            shadowColor: ref.watch(pendingNotifyProvider).when(
+                  data: (notifies) {
+                    if (notifies.isNotEmpty) {
+                      return Colors.red.withOpacity(0.5);
+                    } else {
+                      return Colors.black.withOpacity(0.5);
+                    }
+                  },
+                  loading: () => Colors.black.withOpacity(0.5),
+                  error: (error, _) => Colors.black.withOpacity(0.5),
+                ),
+            elevation: ref.watch(pendingNotifyProvider).when(
+                  data: (notifies) {
+                    if (notifies.isNotEmpty) {
+                      return 5.0;
+                    } else {
+                      return 3.0;
+                    }
+                  },
+                  loading: () => 3.0,
+                  error: (error, _) => 3.0,
+                ),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -38,6 +66,8 @@ class HomePage extends HookConsumerWidget {
             context,
             icon: Icons.settings,
             title: "フローの作成",
+            shadowColor: Colors.black.withOpacity(0.5),
+            elevation: 3,
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -50,6 +80,8 @@ class HomePage extends HookConsumerWidget {
             context,
             icon: Icons.check,
             title: 'フローの確認',
+            shadowColor: Colors.black.withOpacity(0.5),
+            elevation: 3,
             onTap: () async {
               await ref.read(actionFlowListProvider.notifier).get();
               if (context.mounted) {
@@ -63,44 +95,6 @@ class HomePage extends HookConsumerWidget {
           ),
         ],
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   fixedColor: Colors.black,
-      //   unselectedItemColor: Colors.grey[700],
-      //   iconSize: 30,
-      //   backgroundColor: Colors.yellow[50],
-      //   items: const [
-      //     BottomNavigationBarItem(
-      //       icon: Padding(
-      //         padding: EdgeInsets.only(top: 8),
-      //         child: Icon(
-      //           Icons.newspaper,
-      //           color: Colors.black,
-      //         ),
-      //       ),
-      //       label: 'ニュース',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Padding(
-      //         padding: EdgeInsets.only(top: 8),
-      //         child: Icon(
-      //           Icons.home,
-      //           color: Colors.black,
-      //         ),
-      //       ),
-      //       label: 'ホーム',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Padding(
-      //         padding: EdgeInsets.only(top: 8),
-      //         child: Icon(
-      //           Icons.menu,
-      //           color: Colors.black,
-      //         ),
-      //       ),
-      //       label: 'その他',
-      //     ),
-      //   ],
-      // ),
     );
   }
 
@@ -108,11 +102,15 @@ class HomePage extends HookConsumerWidget {
     BuildContext context, {
     required IconData icon,
     required String title,
+    required Color shadowColor,
+    required double elevation,
     void Function()? onTap,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
       child: Card(
+        shadowColor: shadowColor,
+        elevation: elevation,
         child: ListTile(
           leading: Padding(
             padding: const EdgeInsets.all(8.0),

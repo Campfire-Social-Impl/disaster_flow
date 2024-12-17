@@ -79,6 +79,9 @@ class NotifySelectPage extends HookConsumerWidget {
                                     ref
                                         .read(flowItemListProvider.notifier)
                                         .get(flow.id);
+                                    ref
+                                        .read(selectedNotifyProvider.notifier)
+                                        .update((value) => notify);
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
@@ -93,7 +96,11 @@ class NotifySelectPage extends HookConsumerWidget {
                                       Colors.black,
                                     ),
                                     backgroundColor: WidgetStateProperty.all(
-                                      const Color.fromARGB(255, 255, 220, 81),
+                                      (notify.addressed == false
+                                          ? const Color.fromARGB(
+                                              255, 200, 120, 80)
+                                          : const Color.fromARGB(
+                                              255, 255, 220, 81)),
                                     ),
                                   )
                                 : ButtonStyle(

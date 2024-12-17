@@ -3,20 +3,24 @@ import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Notify {
+  final int id;
   final String disaster;
   final String description;
   final double longitute;
   final double latitude;
   final double radius;
   final DateTime time;
+  final bool addressed;
 
   Notify({
+    required this.id,
     required this.disaster,
     required this.description,
     required this.longitute,
     required this.latitude,
     required this.radius,
     required this.time,
+    required this.addressed,
   });
 }
 
@@ -32,12 +36,14 @@ class NotifyListNotifier extends AsyncNotifier<List<Notify>> {
     final notifies = await database.select(database.notifyRaw).get();
     return notifies
         .map((e) => Notify(
+              id: e.id,
               disaster: e.disaster,
               description: e.description,
               longitute: e.longitute,
               latitude: e.latitude,
               radius: e.radius,
               time: e.time,
+              addressed: e.addressed,
             ))
         .toList();
   }
@@ -66,6 +72,7 @@ class NotifyListNotifier extends AsyncNotifier<List<Notify>> {
             latitude: latitude,
             radius: radius,
             time: time,
+            addressed: const Value(false),
           ),
         );
     state = await AsyncValue.guard(() async {
@@ -96,6 +103,7 @@ class NotifyListNotifier extends AsyncNotifier<List<Notify>> {
     double latitude,
     double radius,
     DateTime time,
+    bool addressed,
   ) async {
     state = const AsyncValue.loading();
     await (database.update(database.notifyRaw)
@@ -108,6 +116,7 @@ class NotifyListNotifier extends AsyncNotifier<List<Notify>> {
         latitude: Value(latitude),
         radius: Value(radius),
         time: Value(time),
+        addressed: Value(addressed),
       ),
     );
     state = await AsyncValue.guard(() async {

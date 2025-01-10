@@ -1,6 +1,7 @@
 import 'package:disaster_flow/models/flow_item.dart';
 import 'package:disaster_flow/models/flows.dart';
 import 'package:disaster_flow/models/notify.dart';
+import 'package:disaster_flow/widgets/stripe.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -66,8 +67,15 @@ class FlowLaunchPage extends HookConsumerWidget {
         centerTitle: true,
         toolbarHeight: 80,
         foregroundColor: Colors.black,
-        backgroundColor: const Color.fromARGB(255, 200, 120, 80),
+        backgroundColor: const Color.fromARGB(255, 255, 220, 81),
         shadowColor: Colors.black.withOpacity(0.2),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(10),
+          child: CustomPaint(
+            size: const Size.fromHeight(10),
+            painter: StripePainter(),
+          ),
+        ),
       ),
       body: flow != null && checks.isNotEmpty
           ? Column(
@@ -97,7 +105,7 @@ class FlowLaunchPage extends HookConsumerWidget {
                             style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all(
                                 ref.watch(allCheckedProvider)
-                                    ? const Color.fromARGB(255, 200, 120, 80)
+                                    ? const Color.fromARGB(255, 255, 220, 81)
                                     : Colors.grey,
                               ),
                             ),
@@ -113,10 +121,12 @@ class FlowLaunchPage extends HookConsumerWidget {
                                     Navigator.of(context).pop();
                                   }
                                 : null,
-                            child: const Text(
+                            child: Text(
                               "完了",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: ref.watch(allCheckedProvider)
+                                    ? Colors.black
+                                    : Colors.white,
                               ),
                             ),
                           ),

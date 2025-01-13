@@ -38,7 +38,6 @@ Future<void> firebaseMessagingConfigure() async {
   await initializeLocalNotification();
 
   FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
-  FirebaseMessaging.onMessage.listen(foregroundMessageHandler);
 }
 
 Future<void> initializeLocalNotification() async {
@@ -67,44 +66,109 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
     return;
   }
 
-  // filter disaster
-  final disaster = DisasterMessageData.fromMap(message.data);
-  if (disaster.type == "earthquake") {
-    final data = EarthquakeData.fromMap(message.data);
-    debugPrint("Earthquake: ${data.place}");
-    notifyEarthquake(message.data);
-  } else if (disaster.type == "rain") {
-    final data = RainData.fromMap(message.data);
-    debugPrint("Rain: ${data.place}");
-    notifyRain(message.data);
-  } else {
-    debugPrint("Unknown disaster type: ${disaster.type}");
-    return;
-  }
-}
+  final notificationPlugin = FlutterLocalNotificationsPlugin();
+  final location = Location();
 
-void foregroundMessageHandler(RemoteMessage message) {
-  debugMessageHandler(message);
+  location.getLocation().then((position) async {
+    await notificationPlugin.show(
+      0,
+      "位置情報",
+      "緯度: ${position.latitude}\n経度: ${position.longitude}",
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          androidChannel.id,
+          androidChannel.name,
+          importance: Importance.max,
+        ),
+      ),
+    );
 
-  if (message.data.isEmpty) {
-    return;
-  }
+    if (position.latitude == null || position.longitude == null) {
+      await notificationPlugin.show(
+        0,
+        "位置情報の権限",
+        "位置情報の権限が許可されていません。",
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            androidChannel.id,
+            androidChannel.name,
+            importance: Importance.max,
+          ),
+        ),
+      );
+      return;
+    }
 
-  // filter disaster
-  final disaster = DisasterMessageData.fromMap(message.data);
+    // filter disaster
+    final disaster = DisasterMessageData.fromMap(message.data);
+    if (disaster.type == "earthquake") {
+      final earthquake = EarthquakeData.fromMap(message.data);
+      debugPrint("Earthquake: ${earthquake.place}");
 
-  if (disaster.type == "earthquake") {
-    final data = EarthquakeData.fromMap(message.data);
-    debugPrint("Earthquake: ${data.place}");
-    notifyEarthquake(message.data);
-  } else if (disaster.type == "rain") {
-    final data = RainData.fromMap(message.data);
-    debugPrint("Rain: ${data.place}");
-    notifyRain(message.data);
-  } else {
-    debugPrint("Unknown disaster type: ${disaster.type}");
-    return;
-  }
+      if (!isInArea(
+        position.longitude!,
+        position.latitude!,
+        earthquake.longitude,
+        earthquake.latitude,
+        earthquake.radius,
+      )) {
+        return;
+      }
+      await notifyEarthquake(message.data);
+      await database.into(database.notifyRaw).insert(
+            NotifyRawCompanion.insert(
+              disaster: "地震",
+              description: "発生地点: ${earthquake.place}\n"
+                  "マグニチュード: ${earthquake.magnitude}\n"
+                  "震源の深さ: ${earthquake.depth}\n"
+                  "最大震度: ${earthquake.maxScale}",
+              longitute: earthquake.longitude,
+              latitude: earthquake.latitude,
+              radius: earthquake.radius,
+              time: earthquake.time,
+            ),
+          );
+    } else if (disaster.type == "rain") {
+      final rain = RainData.fromMap(message.data);
+      debugPrint("Rain: ${rain.place}");
+      if (!isInArea(
+        position.longitude!,
+        position.latitude!,
+        rain.longitude,
+        rain.latitude,
+        rain.radius,
+      )) {
+        return;
+      }
+      await notifyRain(message.data);
+      await database.into(database.notifyRaw).insert(
+            NotifyRawCompanion.insert(
+              disaster: "大雨",
+              description: "発生地点: ${rain.place}",
+              longitute: rain.longitude,
+              latitude: rain.latitude,
+              radius: rain.radius,
+              time: rain.time,
+            ),
+          );
+    } else {
+      debugPrint("Unknown disaster type: ${disaster.type}");
+      return;
+    }
+  }).onError((error, stackTrace) async {
+    await notificationPlugin.show(
+      0,
+      "位置情報の権限 - error",
+      "位置情報の権限が許可されていません。",
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          androidChannel.id,
+          androidChannel.name,
+          importance: Importance.max,
+        ),
+      ),
+    );
+  });
 }
 
 void debugMessageHandler(RemoteMessage message) {
@@ -133,137 +197,92 @@ void debugMessageHandler(RemoteMessage message) {
   }
 }
 
-void notifyEarthquake(
+Future<void> notifyEarthquake(
   dynamic data,
-) {
+) async {
   final notificationPlugin = FlutterLocalNotificationsPlugin();
 
   final earthquake = EarthquakeData.fromMap(data);
   final location = Location();
 
   debugPrint("get location");
-  location.getLocation().then((value) async {
-    debugPrint("get location: $value");
 
-    if (value.latitude == null || value.longitude == null) {
-      notificationPlugin.show(
-        0,
-        "位置情報の権限",
-        "位置情報の権限が許可されていません。",
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            androidChannel.id,
-            androidChannel.name,
-            importance: Importance.max,
-          ),
+  final value = await location.getLocation();
+  debugPrint("get location: $value");
+
+  if (value.latitude == null || value.longitude == null) {
+    await notificationPlugin.show(
+      0,
+      "位置情報の権限",
+      "位置情報の権限が許可されていません。",
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          androidChannel.id,
+          androidChannel.name,
+          importance: Importance.max,
         ),
-      );
-      return;
-    }
+      ),
+    );
+    return;
+  }
 
-    await database.into(database.notifyRaw).insert(
-          NotifyRawCompanion.insert(
-            disaster: "地震",
-            description: "発生地点: ${earthquake.place}\n"
-                "マグニチュード: ${earthquake.magnitude}\n"
-                "震源の深さ: ${earthquake.depth}\n"
-                "最大震度: ${earthquake.maxScale}",
-            longitute: earthquake.longitude,
-            latitude: earthquake.latitude,
-            radius: earthquake.radius,
-            time: earthquake.time,
-          ),
-        );
-
-    if (isInArea(
-      value.latitude!,
-      value.longitude!,
-      earthquake.latitude,
-      earthquake.longitude,
-      earthquake.radius,
-    )) {
-      notificationPlugin.show(
-        0,
-        "災害発生の通知",
-        "地震が発生しました: ${earthquake.place}\n"
-            " マグニチュード: ${earthquake.magnitude}"
-            " 震源の深さ: ${earthquake.depth}"
-            " 最大震度: ${earthquake.maxScale}"
-            " 発生時刻: ${earthquake.time}",
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            androidChannel.id,
-            androidChannel.name,
-            importance: Importance.max,
-          ),
-        ),
-      );
-    }
-  }).onError((error, stackTrace) {
-    debugPrint("Location Error: $error");
-  });
+  await notificationPlugin.show(
+    0,
+    "災害発生の通知",
+    "地震が発生しました: ${earthquake.place}\n"
+        " マグニチュード: ${earthquake.magnitude}"
+        " 震源の深さ: ${earthquake.depth}"
+        " 最大震度: ${earthquake.maxScale}"
+        " 発生時刻: ${earthquake.time}",
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        androidChannel.id,
+        androidChannel.name,
+        importance: Importance.max,
+      ),
+    ),
+  );
 }
 
-void notifyRain(
+Future<void> notifyRain(
   dynamic data,
-) {
+) async {
   final notificationPlugin = FlutterLocalNotificationsPlugin();
 
   final rain = RainData.fromMap(data);
   final location = Location();
 
-  location.getLocation().then((value) async {
-    if (value.latitude == null || value.longitude == null) {
-      notificationPlugin.show(
-        0,
-        "位置情報の権限",
-        "位置情報の権限が許可されていません。",
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            androidChannel.id,
-            androidChannel.name,
-            importance: Importance.max,
-          ),
-        ),
-      );
-      return;
-    }
+  final value = await location.getLocation();
 
-    await database.into(database.notifyRaw).insert(
-          NotifyRawCompanion.insert(
-            disaster: "大雨",
-            description: "発生地点: ${rain.place}",
-            longitute: rain.longitude,
-            latitude: rain.latitude,
-            radius: rain.radius,
-            time: rain.time,
-          ),
-        );
-
-    if (isInArea(
-      value.latitude!,
-      value.longitude!,
-      rain.latitude,
-      rain.longitude,
-      rain.radius,
-    )) {
-      notificationPlugin.show(
-        0,
-        "災害発生の通知",
-        "大雨に伴う災害に警戒して下さい: ${rain.place}\n"
-            "発表時刻: ${rain.time}",
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            androidChannel.id,
-            androidChannel.name,
-            importance: Importance.max,
-          ),
+  if (value.latitude == null || value.longitude == null) {
+    await notificationPlugin.show(
+      0,
+      "位置情報の権限",
+      "位置情報の権限が許可されていません。",
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          androidChannel.id,
+          androidChannel.name,
+          importance: Importance.max,
         ),
-      );
-    }
-  }).onError((error, stackTrace) {
-    debugPrint("Location Error: $error");
-  });
+      ),
+    );
+    return;
+  }
+
+  await notificationPlugin.show(
+    0,
+    "災害発生の通知",
+    "大雨に伴う災害に警戒して下さい: ${rain.place}\n"
+        "発表時刻: ${rain.time}",
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        androidChannel.id,
+        androidChannel.name,
+        importance: Importance.max,
+      ),
+    ),
+  );
 }
 
 class DisasterMessageData {

@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final notifiesProvider = FutureProvider<List<Notify>>((ref) async {
   final notifies = await ref.watch(notifyListProvider.future);
+  notifies.sort((a, b) => b.time.compareTo(a.time));
   return notifies;
 });
 
@@ -98,9 +99,8 @@ class NotifySelectPage extends HookConsumerWidget {
                                     backgroundColor: WidgetStateProperty.all(
                                       (notify.addressed == false
                                           ? const Color.fromARGB(
-                                              255, 200, 120, 80)
-                                          : const Color.fromARGB(
-                                              255, 255, 220, 81)),
+                                              255, 255, 220, 81)
+                                          : Colors.grey),
                                     ),
                                   )
                                 : ButtonStyle(

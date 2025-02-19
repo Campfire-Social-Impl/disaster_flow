@@ -43,7 +43,7 @@ Future<void> firebaseMessagingConfigure() async {
 Future<void> initializeLocalNotification() async {
   final notificationPlugin = FlutterLocalNotificationsPlugin();
 
-  notificationPlugin.initialize(
+  await notificationPlugin.initialize(
     const InitializationSettings(
       android: AndroidInitializationSettings("@mipmap/ic_launcher"),
       iOS: DarwinInitializationSettings(),
@@ -69,96 +69,46 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
   final notificationPlugin = FlutterLocalNotificationsPlugin();
   final location = Location();
 
-  location.getLocation().then((position) async {
-    await notificationPlugin.show(
-      0,
-      "位置情報",
-      "緯度: ${position.latitude}\n経度: ${position.longitude}",
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          androidChannel.id,
-          androidChannel.name,
-          importance: Importance.max,
-        ),
+  if (await location.serviceEnabled()) {
+    await location.requestService();
+  }
+  await location.enableBackgroundMode(enable: true);
+  if (await location.hasPermission() != PermissionStatus.granted) {
+    await location.requestPermission();
+  }
+
+  await notificationPlugin.show(
+    0,
+    "位置情報",
+    "位置情報を取得します。",
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        androidChannel.id,
+        androidChannel.name,
+        importance: Importance.max,
       ),
-    );
+    ),
+  );
 
-    if (position.latitude == null || position.longitude == null) {
-      await notificationPlugin.show(
-        0,
-        "位置情報の権限",
-        "位置情報の権限が許可されていません。",
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            androidChannel.id,
-            androidChannel.name,
-            importance: Importance.max,
-          ),
-        ),
-      );
-      return;
-    }
+  final position = await location.getLocation();
 
-    // filter disaster
-    final disaster = DisasterMessageData.fromMap(message.data);
-    if (disaster.type == "earthquake") {
-      final earthquake = EarthquakeData.fromMap(message.data);
-      debugPrint("Earthquake: ${earthquake.place}");
+  await notificationPlugin.show(
+    0,
+    "位置情報",
+    "緯度: ${position.latitude}\n経度: ${position.longitude}",
+    NotificationDetails(
+      android: AndroidNotificationDetails(
+        androidChannel.id,
+        androidChannel.name,
+        importance: Importance.max,
+      ),
+    ),
+  );
 
-      if (!isInArea(
-        position.longitude!,
-        position.latitude!,
-        earthquake.longitude,
-        earthquake.latitude,
-        earthquake.radius,
-      )) {
-        return;
-      }
-      await notifyEarthquake(message.data);
-      await database.into(database.notifyRaw).insert(
-            NotifyRawCompanion.insert(
-              disaster: "地震",
-              description: "発生地点: ${earthquake.place}\n"
-                  "マグニチュード: ${earthquake.magnitude}\n"
-                  "震源の深さ: ${earthquake.depth}\n"
-                  "最大震度: ${earthquake.maxScale}",
-              longitute: earthquake.longitude,
-              latitude: earthquake.latitude,
-              radius: earthquake.radius,
-              time: earthquake.time,
-            ),
-          );
-    } else if (disaster.type == "rain") {
-      final rain = RainData.fromMap(message.data);
-      debugPrint("Rain: ${rain.place}");
-      if (!isInArea(
-        position.longitude!,
-        position.latitude!,
-        rain.longitude,
-        rain.latitude,
-        rain.radius,
-      )) {
-        return;
-      }
-      await notifyRain(message.data);
-      await database.into(database.notifyRaw).insert(
-            NotifyRawCompanion.insert(
-              disaster: "大雨",
-              description: "発生地点: ${rain.place}",
-              longitute: rain.longitude,
-              latitude: rain.latitude,
-              radius: rain.radius,
-              time: rain.time,
-            ),
-          );
-    } else {
-      debugPrint("Unknown disaster type: ${disaster.type}");
-      return;
-    }
-  }).onError((error, stackTrace) async {
+  if (position.latitude == null || position.longitude == null) {
     await notificationPlugin.show(
       0,
-      "位置情報の権限 - error",
+      "位置情報の権限",
       "位置情報の権限が許可されていません。",
       NotificationDetails(
         android: AndroidNotificationDetails(
@@ -168,7 +118,65 @@ Future<void> backgroundMessageHandler(RemoteMessage message) async {
         ),
       ),
     );
-  });
+    return;
+  }
+
+  // filter disaster
+  final disaster = DisasterMessageData.fromMap(message.data);
+  if (disaster.type == "earthquake") {
+    final earthquake = EarthquakeData.fromMap(message.data);
+    debugPrint("Earthquake: ${earthquake.place}");
+
+    if (!isInArea(
+      position.longitude!,
+      position.latitude!,
+      earthquake.longitude,
+      earthquake.latitude,
+      earthquake.radius,
+    )) {
+      return;
+    }
+    await notifyEarthquake(message.data);
+    await database.into(database.notifyRaw).insert(
+          NotifyRawCompanion.insert(
+            disaster: "地震",
+            description: "発生地点: ${earthquake.place}\n"
+                "マグニチュード: ${earthquake.magnitude}\n"
+                "震源の深さ: ${earthquake.depth}\n"
+                "最大震度: ${earthquake.maxScale}",
+            longitute: earthquake.longitude,
+            latitude: earthquake.latitude,
+            radius: earthquake.radius,
+            time: earthquake.time,
+          ),
+        );
+  } else if (disaster.type == "rain") {
+    final rain = RainData.fromMap(message.data);
+    debugPrint("Rain: ${rain.place}");
+    if (!isInArea(
+      position.longitude!,
+      position.latitude!,
+      rain.longitude,
+      rain.latitude,
+      rain.radius,
+    )) {
+      return;
+    }
+    await notifyRain(message.data);
+    await database.into(database.notifyRaw).insert(
+          NotifyRawCompanion.insert(
+            disaster: "大雨",
+            description: "発生地点: ${rain.place}",
+            longitute: rain.longitude,
+            latitude: rain.latitude,
+            radius: rain.radius,
+            time: rain.time,
+          ),
+        );
+  } else {
+    debugPrint("Unknown disaster type: ${disaster.type}");
+    return;
+  }
 }
 
 void debugMessageHandler(RemoteMessage message) {
